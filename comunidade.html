@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Participe da nossa comunidade de acessibilidade digital. Compartilhe experiências, tire dúvidas e colabore.">
+    
+    
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Comunidade - Conexão Digital Inclusiva">
+    <meta property="og:description" content="Junte-se à nossa comunidade de acessibilidade digital.">
+    
+    
+    <style>
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .community-card {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .community-card:hover,
+        .community-card:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+        
+        .forum-section {
+            background: var(--background-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .forum-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .forum-category {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .forum-category:hover,
+        .forum-category:focus {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-md);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .recent-posts {
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .post-item {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .post-title {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .post-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+        }
+        
+        .post-author {
+            font-weight: 500;
+        }
+        
+        .post-preview {
+            margin: var(--spacing-sm) 0;
+            line-height: 1.6;
+        }
+        
+        .post-tags {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .tag {
+            background: var(--background-gray);
+            color: var(--text-color);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+        
+        .tag:hover,
+        .tag:focus {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .resource-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .events-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .event-card {
+            background: rgba(255,255,255,0.1);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+        
+        .event-date {
+            background: rgba(255,255,255,0.2);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            margin-bottom: var(--spacing-md);
+            font-weight: bold;
+        }
+        
+        .contributors-section {
+            text-align: center;
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .contributors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .contributor-card {
+            background: rgb(24, 23, 23);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .contributor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .contributor-name {
+            font-weight: bold;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .contributor-role {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .contributor-contributions {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+        }
+        
+        .join-form {
+            background: var(--background-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+        
+        .form-checkbox input {
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .community-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .post-header {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .post-meta {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero hero-secondary" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">Comunidade Inclusiva</h1>
+                    <p class="hero-subtitle">Conecte-se, aprenda e colabore por um mundo digital mais acessível</p>
+                    <p class="hero-subtitle">(Seção Demonstrativa)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Overview -->
+        <section class="section" aria-labelledby="overview-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="overview-title" class="section-title">Faça Parte da Mudança</h2>
+                    <p class="section-subtitle">Nossa comunidade reúne pessoas comprometidas com a acessibilidade digital</p>
+                </div>
+                
+                <div class="community-grid">
+                    <div class="community-card">
+                        <span class="card-icon" aria-hidden="true">💬</span>
+                        <h3>Fórum de Discussões</h3>
+                        <p>Participe de conversas sobre acessibilidade, tire dúvidas e compartilhe experiências com outros membros da comunidade.</p>
+                        <a href="#forum" class="btn btn-primary">Participar do Fórum</a>
+                    </div>
+                    
+                    <div class="community-card">
+                        <span class="card-icon" aria-hidden="true">📚</span>
+                        <h3>Recursos Compartilhados</h3>
+                        <p>Acesse uma biblioteca colaborativa de recursos, ferramentas e materiais sobre acessibilidade digital.</p>
+                        <a href="#resources" class="btn btn-primary">Ver Recursos</a>
+                    </div>
+                    
+                    <div class="community-card">
+                        <span class="card-icon" aria-hidden="true">🎓</span>
+                        <h3>Eventos e Workshops</h3>
+                        <p>Participe de eventos online, workshops e webinars sobre temas relacionados à inclusão digital.</p>
+                        <a href="#events" class="btn btn-primary">Ver Eventos</a>
+                    </div>
+                    
+                    <div class="community-card">
+                        <span class="card-icon" aria-hidden="true">🤝</span>
+                        <h3>Colaboração</h3>
+                        <p>Colabore em projetos open source, contribua com código e ajude a melhorar ferramentas de acessibilidade.</p>
+                        <a href="#contribute" class="btn btn-primary">Colaborar</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forum Section -->
+        <section id="forum" class="forum-section" aria-labelledby="forum-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="forum-title" class="section-title">Fórum da Comunidade</h2>
+                    <p class="section-subtitle">Explore as categorias e participe das discussões (Recursos disponíveis em breve)</p>
+                </div>
+                
+                
+        </section>
+
+        <!-- Recent Posts -->
+        <section class="section" aria-labelledby="recent-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="recent-title" class="section-title">Discussões Recentes</h2>
+                    <p class="section-subtitle">Acompanhe as conversas mais recentes da comunidade (Recursos disponíveis em breve)</p>
+                </div>
+                
+                
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="events-section" aria-labelledby="events-title">
+            <div class="container">
+                <h2 id="events-title" class="section-title text-white">Próximos Eventos</h2>
+                <p class="text-white">Participe dos nossos eventos e workshops sobre acessibilidade digital (Recursos disponíveis em breve)</p>
+                
+                
+        </section>
+
+        <!-- Contributors -->
+        <section class="contributors-section" aria-labelledby="contributors-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="contributors-title" class="section-title">Principais Contribuidores</h2>
+                    <p class="section-subtitle">Conheça os membros mais ativos da nossa comunidade (Recursos disponíveis em breve)</p>
+                </div>
+                
+                
+        </section>
+
+        <!-- Join Form -->
+        <section id="contribute" class="section" aria-labelledby="join-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="join-title" class="section-title">Junte-se à Comunidade</h2>
+                    <p class="section-subtitle">Preencha o formulário abaixo para participar da nossa comunidade (Recursos disponíveis em breve)</p>
+                </div>
+                
+                <div class="join-form">
+                    <form id="community-form" novalidate>
+                        <div class="form-group">
+                            <label for="name" class="form-label">Nome Completo *</label>
+                            <input type="text" id="name" name="name" class="form-input" required aria-describedby="name-error">
+                            <div id="name-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label">E-mail *</label>
+                            <input type="email" id="email" name="email" class="form-input" required aria-describedby="email-error">
+                            <div id="email-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="role" class="form-label">Área de Atuação *</label>
+                            <select id="role" name="role" class="form-select" required aria-describedby="role-error">
+                                <option value="">Selecione sua área</option>
+                                <option value="developer">Desenvolvedor(a)</option>
+                                <option value="designer">Designer</option>
+                                <option value="tester">Testador(a) de Acessibilidade</option>
+                                <option value="user">Usuário de Tecnologia Assistiva</option>
+                                <option value="researcher">Pesquisador(a)</option>
+                                <option value="educator">Educador(a)</option>
+                                <option value="manager">Gestor(a)</option>
+                                <option value="other">Outro</option>
+                            </select>
+                            <div id="role-error" class="error-message" role="alert" aria-live="polite"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="experience" class="form-label">Nível de Experiência com Acessibilidade</label>
+                            <select id="experience" name="experience" class="form-select">
+                                <option value="">Selecione seu nível</option>
+                                <option value="beginner">Iniciante</option>
+                                <option value="intermediate">Intermediário</option>
+                                <option value="advanced">Avançado</option>
+                                <option value="expert">Especialista</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interests" class="form-label">Áreas de Interesse</label>
+                            <textarea id="interests" name="interests" class="form-textarea" placeholder="Descreva suas áreas de interesse em acessibilidade digital..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contribution" class="form-label">Como gostaria de contribuir?</label>
+                            <textarea id="contribution" name="contribution" class="form-textarea" placeholder="Compartilhe como você gostaria de contribuir com a comunidade..."></textarea>
+                        </div>
+                        
+                        
+                        <button type="submit" class="btn btn-primary btn-large">Participar da Comunidade</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/supabase-config.js"></script>
+    
+    <script>
+        // Community form validation and submission
+        document.getElementById('community-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            
+            let isValid = true;
+            
+            // Validate required fields
+            const requiredFields = ['name', 'email', 'role'];
+            requiredFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                const errorEl = document.getElementById(fieldName + '-error');
+                
+                if (!field.value.trim()) {
+                    errorEl.textContent = 'Este campo é obrigatório.';
+                    isValid = false;
+                }
+            });
+            
+            // Validate email format
+            const email = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.value && !emailRegex.test(email.value)) {
+                emailError.textContent = 'Por favor, insira um e-mail válido.';
+                isValid = false;
+            }
+            
+            // Validate terms acceptance
+            const terms = document.getElementById('terms');
+            const termsError = document.getElementById('terms-error');
+            
+            if (!terms.checked) {
+                termsError.textContent = 'Você deve aceitar os termos de uso.';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Simulate form submission
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                
+                submitBtn.textContent = 'Enviando...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert('Obrigado por se juntar à nossa comunidade! Você receberá um e-mail de confirmação em breve.');
+                    e.target.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            } else {
+                // Focus on first error field
+                const firstError = document.querySelector('.error-message:not(:empty)');
+                if (firstError) {
+                    const fieldId = firstError.id.replace('-error', '');
+                    document.getElementById(fieldId).focus();
+                }
+            }
+        });
+        
+        // Forum category interaction
+        document.querySelectorAll('.forum-category').forEach(category => {
+            category.addEventListener('click', function() {
+                const categoryName = this.querySelector('h3').textContent;
+                alert(`Redirecionando para a categoria: ${categoryName}`);
+            });
+            
+            category.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Focus management for accessibility
+                    if (target.hasAttribute('tabindex') || target.tagName === 'H1' || target.tagName === 'H2') {
+                        target.focus();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

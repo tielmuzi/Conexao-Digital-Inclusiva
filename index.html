@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexão Digital Inclusiva - Acessibilidade Digital é um Direito</title>
+    <meta name="description" content="Plataforma de referência em acessibilidade digital para pessoas neurodivergentes e PCDs">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+</head>
+<body>
+    
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                <button class="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-container">
+                <h1 id="hero-title" class="hero-title">
+                    Acessibilidade Digital é um Direito, Não um Recurso.
+                </h1>
+                <p class="hero-subtitle">
+                    Conectando pessoas, reduzindo desigualdades e demonstrando o potencial da tecnologia para a inclusão digital.
+                </p>
+                <div class="hero-cta">
+                    <a href="sobre.html" class="btn btn-primary" role="button">Conheça Nossa Missão</a>
+                    <a href="comunidade.html" class="btn btn-secondary" role="button">Participe da Comunidade</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Understanding Diversity Section -->
+        <section class="diversity-section" aria-labelledby="diversity-title">
+            <div class="container">
+                <h2 id="diversity-title">Entendendo a Diversidade</h2>
+                <div class="diversity-grid">
+                    <div class="diversity-card">
+                        <div class="card-icon">
+                            <i class="fas fa-brain" aria-hidden="true"></i>
+                        </div>
+                        <h3>Neurodiversidade</h3>
+                        <p>Compreenda como condições como Autismo, TDAH e Dislexia impactam a navegação digital e como podemos criar experiências mais inclusivas.</p>
+                        <a href="https://mundoeducacao.uol.com.br/curiosidades/o-que-e-neurodiversidade.htm" class="card-link">Saiba mais</a>
+                    </div>
+                    <div class="diversity-card">
+                        <div class="card-icon">
+                            <i class="fas fa-universal-access" aria-hidden="true"></i>
+                        </div>
+                        <h3>Pessoas com Deficiência</h3>
+                        <p>Explore as barreiras comuns enfrentadas por pessoas com deficiências visuais, auditivas, motoras e cognitivas na web.</p>
+                        <a href="https://pcdmais.com.br/o-que-e-pcd/" class="card-link">Saiba mais</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Importance Section -->
+        <section class="importance-section" aria-labelledby="importance-title">
+            <div class="container">
+                <h2 id="importance-title">A Importância da Acessibilidade</h2>
+                <div class="importance-content">
+                    <div class="importance-text">
+                        <p>A acessibilidade digital é crucial para garantir autonomia, educação, emprego e interação social para todos. Descubra como pequenas mudanças podem fazer uma grande diferença.</p>
+                        <a href="importancia.html" class="btn btn-outline">Explore a Importância</a>
+                    </div>
+                    
+        </section>
+
+        <!-- Technologies Section -->
+        <section class="technologies-section" aria-labelledby="tech-title">
+            <div class="container">
+                <h2 id="tech-title">Tecnologias Inclusivas</h2>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <i class="fas fa-assistive-listening-systems" aria-hidden="true"></i>
+                        <h3>Leitores de Tela</h3>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-image" aria-hidden="true"></i>
+                        <h3>Textos Alternativos</h3>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-adjust" aria-hidden="true"></i>
+                        <h3>Alto Contraste</h3>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-keyboard" aria-hidden="true"></i>
+                        <h3>Navegação por Teclado</h3>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-microphone" aria-hidden="true"></i>
+                        <h3>Comandos de Voz</h3>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                        <h3>Design Responsivo</h3>
+                    </div>
+                </div>
+                <div class="tech-cta">
+                    <a href="tecnologias.html" class="btn btn-primary">Conheça Todas as Tecnologias</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ODS 10 Section -->
+        <section class="ods-section" aria-labelledby="ods-title">
+            <div class="container">
+                <div class="ods-content">
+                    <div class="ods-text">
+                        <h2 id="ods-title">ODS 10 - Redução das Desigualdades</h2>
+                        <p>Descubra como a acessibilidade digital contribui diretamente para o Objetivo de Desenvolvimento Sustentável 10 da ONU, promovendo a redução das desigualdades globais.</p>
+                        <a href="ods10.html" class="btn btn-outline">Saiba Mais sobre ODS 10</a>
+                    </div>
+                    <div class="ods-icon">
+                        <i class="fas fa-globe" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/voice-commands.js"></script>
+</body>
+</html>

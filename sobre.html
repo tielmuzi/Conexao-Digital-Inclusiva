@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Conheça o projeto Conexão Digital Inclusiva e nossa missão de promover acessibilidade digital para todos.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles/main.css" as="style">
+    <link rel="preload" href="styles/accessibility.css" as="style">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sobre - Conexão Digital Inclusiva">
+    <meta property="og:description" content="Conheça nossa missão de promover acessibilidade digital para pessoas neurodivergentes e com deficiência.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://conexaodigitalinclusiva.com/sobre">
+    
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "Sobre - Conexão Digital Inclusiva",
+        "description": "Informações sobre o projeto Conexão Digital Inclusiva e nossa missão de promover acessibilidade digital.",
+        "url": "https://conexaodigitalinclusiva.com/sobre"
+    }
+    </script>
+</head>
+<body>
+   
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero hero-secondary" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">Sobre o Projeto</h1>
+                    <p class="hero-subtitle">Conheça nossa missão de tornar o mundo digital mais acessível e inclusivo para todos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission Section -->
+        <section class="section" aria-labelledby="mission-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="mission-title" class="section-title">Nossa Missão</h2>
+                    <p class="section-subtitle">Promover a inclusão digital através da acessibilidade</p>
+                </div>
+                
+                <div class="mission-grid">
+                    <div class="mission-card">
+                        <div class="mission-icon" aria-hidden="true">🎯</div>
+                        <h3>Objetivo</h3>
+                        <p>Criar uma plataforma web que sirva como ferramenta educativa, demonstração de boas práticas e canal de coleta de dados sobre acessibilidade digital.</p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <div class="mission-icon" aria-hidden="true">🌍</div>
+                        <h3>Visão</h3>
+                        <p>Um mundo digital onde todas as pessoas, independentemente de suas habilidades ou limitações, possam navegar, aprender e interagir com facilidade e autonomia.</p>
+                    </div>
+                    
+                    <div class="mission-card">
+                        <div class="mission-icon" aria-hidden="true">💝</div>
+                        <h3>Valores</h3>
+                        <p>Inclusão, acessibilidade, empatia, inovação e compromisso com a igualdade de oportunidades no ambiente digital.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Project Section -->
+        <section class="section section-gray" aria-labelledby="about-title">
+            <div class="container">
+                <div class="content-grid">
+                    <div class="content-text">
+                        <h2 id="about-title" class="section-title">O Que é o Conexão Digital Inclusiva?</h2>
+                        <p>O <strong>Conexão Digital Inclusiva</strong> é um projeto inovador que combina educação, tecnologia e pesquisa para promover a acessibilidade digital. Nossa plataforma foi desenvolvida com foco especial em pessoas neurodivergentes e com deficiência, mas beneficia todos os usuários.</p>
+                        
+                        <h3>Características Principais:</h3>
+                        <ul>
+                            <li><strong>Educação Acessível:</strong> Conteúdo educativo sobre diversidade, acessibilidade e tecnologias assistivas</li>
+                            <li><strong>Demonstração Prática:</strong> Exemplos reais de implementação de recursos de acessibilidade</li>
+                            <li><strong>Coleta de Dados:</strong> Pesquisas e feedback para melhorar continuamente a experiência</li>
+                            <li><strong>Tecnologia Avançada:</strong> IA, comandos de voz, leitores de tela e muito mais</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-visual">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">15%</div>
+                                <div class="stat-label">da população mundial tem alguma deficiência</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">70%</div>
+                                <div class="stat-label">dos sites não são totalmente acessíveis</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">das pessoas se beneficiam de design acessível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="section" aria-labelledby="team-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="team-title" class="section-title">Nossa Abordagem</h2>
+                    <p class="section-subtitle">Como trabalhamos para criar um ambiente digital mais inclusivo</p>
+                </div>
+                
+                <div class="approach-grid">
+                    <div class="approach-item">
+                        <div class="approach-step"></div>
+                        <h3>1 - Pesquisa e Análise</h3>
+                        <p>Estudamos as necessidades específicas de pessoas neurodivergentes e com deficiência, analisando barreiras digitais existentes.</p>
+                    </div>
+                    
+                    <div class="approach-item">
+                        <div class="approach-step"></div>
+                        <h3>2 - Design Inclusivo</h3>
+                        <p>Aplicamos princípios de design universal, seguindo diretrizes WCAG e incorporando feedback da comunidade.</p>
+                    </div>
+                    
+                    <div class="approach-item">
+                        <div class="approach-step"></div>
+                        <h3>3 - Desenvolvimento Acessível</h3>
+                        <p>Implementamos tecnologias assistivas, navegação por teclado, compatibilidade com leitores de tela e recursos de IA.</p>
+                    </div>
+                    
+                    <div class="approach-item">
+                        <div class="approach-step"></div>
+                        <h3>4 - Teste e Melhoria</h3>
+                        <p>Realizamos testes contínuos com usuários reais, coletamos feedback e implementamos melhorias constantemente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Section -->
+        <section class="section section-primary" aria-labelledby="impact-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="impact-title" class="section-title text-white">Nosso Impacto</h2>
+                    <p class="section-subtitle text-white">Como estamos fazendo a diferença na vida das pessoas</p>
+                </div>
+                
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <div class="impact-icon" aria-hidden="true">🚀</div>
+                        <h3>Inovação Tecnológica</h3>
+                        <p>Desenvolvemos soluções inovadoras que combinam IA, reconhecimento de voz e tecnologias assistivas para criar experiências verdadeiramente inclusivas.</p>
+                    </div>
+                    
+                    <div class="impact-card">
+                        <div class="impact-icon" aria-hidden="true">📚</div>
+                        <h3>Educação e Conscientização</h3>
+                        <p>Educamos desenvolvedores, designers e organizações sobre a importância da acessibilidade digital e como implementá-la efetivamente.</p>
+                    </div>
+                    
+                    <div class="impact-card">
+                        <div class="impact-icon" aria-hidden="true">🤝</div>
+                        <h3>Comunidade Inclusiva</h3>
+                        <p>Criamos um espaço onde pessoas com diferentes habilidades podem compartilhar experiências, aprender e contribuir para um futuro mais inclusivo.</p>
+                    </div>
+                    
+                    <div class="impact-card">
+                        <div class="impact-icon" aria-hidden="true">📊</div>
+                        <h3>Dados e Pesquisa</h3>
+                        <p>Coletamos dados valiosos sobre necessidades de acessibilidade, ajudando a orientar futuras melhorias e políticas públicas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="section" aria-labelledby="cta-title">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 id="cta-title" class="section-title">Junte-se à Nossa Missão</h2>
+                    <p>Seja parte da mudança! Explore nossos recursos, compartilhe suas experiências e ajude-nos a construir um mundo digital mais inclusivo.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="comunidade.html" class="btn btn-primary">Participar da Comunidade</a>
+                        <a href="feedback.html" class="btn btn-secondary">Enviar Feedback</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

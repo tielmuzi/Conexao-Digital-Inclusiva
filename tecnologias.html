@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologias Assistivas - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Conheça as principais tecnologias assistivas e recursos de acessibilidade digital disponíveis.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles/main.css" as="style">
+    <link rel="preload" href="styles/accessibility.css" as="style">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Tecnologias Assistivas - Conexão Digital Inclusiva">
+    <meta property="og:description" content="Explore as tecnologias que tornam o mundo digital mais acessível para todos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://conexaodigitalinclusiva.com/tecnologias">
+    
+    <style>
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .tech-card {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .tech-card:hover,
+        .tech-card:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+        
+        .tech-title {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .tech-description {
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+        
+        .tech-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .tech-features li {
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--background-gray);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .tech-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .tech-features li::before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .demo-section {
+            background: var(--background-gray);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .demo-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            margin-right: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .demo-button:hover,
+        .demo-button:focus {
+            background: var(--primary-dark);
+        }
+        
+        .category-section {
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .category-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .category-title {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .implementation-guide {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .guide-step {
+            background: rgba(255,255,255,0.1);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+        
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .resource-card {
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .resource-link {
+            display: inline-block;
+            margin-top: var(--spacing-md);
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .resource-link:hover,
+        .resource-link:focus {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero hero-secondary" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">Tecnologias Assistivas</h1>
+                    <p class="hero-subtitle">Descubra as ferramentas que tornam o mundo digital acessível para todos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen Readers Section -->
+        <section class="category-section" aria-labelledby="screen-readers-title">
+            <div class="container">
+                <div class="category-header">
+                    <h2 id="screen-readers-title" class="category-title">Leitores de Tela</h2>
+                    <p>Softwares que convertem texto em fala ou braille para pessoas cegas ou com baixa visão</p>
+                </div>
+                
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🔊</span>
+                        <h3 class="tech-title">NVDA (Gratuito)</h3>
+                        <p class="tech-description">Leitor de tela gratuito e de código aberto para Windows, amplamente usado pela comunidade.</p>
+                        <ul class="tech-features">
+                            <li>Totalmente gratuito</li>
+                            <li>Suporte a múltiplos idiomas</li>
+                            <li>Compatível com navegadores modernos</li>
+                            <li>Comunidade ativa de desenvolvedores</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Características:</h4>
+                            <p>O NVDA (NonVisual Desktop Access) é um leitor de tela gratuito, de código aberto e portátil para o sistema operacional Microsoft Windows, projetado para permitir que pessoas cegas ou com baixa visão usem computadores com autonomia.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🎯</span>
+                        <h3 class="tech-title">JAWS</h3>
+                        <p class="tech-description">Um dos leitores de tela mais populares e avançados para Windows, com recursos profissionais.</p>
+                        <ul class="tech-features">
+                            <li>Recursos avançados de navegação</li>
+                            <li>Suporte empresarial</li>
+                            <li>Integração com Office</li>
+                            <li>Scripts personalizáveis</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Características:</h4>
+                            <p>Oferece navegação rápida, comandos de teclado avançados e suporte técnico profissional.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🍎</span>
+                        <h3 class="tech-title">VoiceOver (Apple)</h3>
+                        <p class="tech-description">Leitor de tela integrado em todos os dispositivos Apple (Mac, iPhone, iPad).</p>
+                        <ul class="tech-features">
+                            <li>Integrado ao sistema</li>
+                            <li>Gestos touch intuitivos</li>
+                            <li>Sincronização entre dispositivos</li>
+                            <li>Suporte a braille</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Ativação:</h4>
+                            <p>Cmd + F5 no Mac ou triplo clique no botão home do iPhone/iPad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Technologies -->
+        <section class="category-section section-gray" aria-labelledby="navigation-title">
+            <div class="container">
+                <div class="category-header">
+                    <h2 id="navigation-title" class="category-title">Tecnologias de Navegação</h2>
+                    <p>Ferramentas que permitem navegar sem usar mouse ou com limitações motoras</p>
+                </div>
+                
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">⌨️</span>
+                        <h3 class="tech-title">Navegação por Teclado</h3>
+                        <p class="tech-description">Permite navegar completamente usando apenas o teclado, essencial para muitos usuários.</p>
+                        <ul class="tech-features">
+                            <li>Tab para avançar entre elementos</li>
+                            <li>Shift+Tab para voltar</li>
+                            <li>Enter/Espaço para ativar</li>
+                            <li>Setas para menus e listas</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Teste agora:</h4>
+                            <button class="demo-button" onclick="demonstrateKeyboardNav()">Demonstrar Navegação</button>
+                            <p><small>Pressione Tab para navegar por esta página!</small></p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">👁️</span>
+                        <h3 class="tech-title">Eye Tracking</h3>
+                        <p class="tech-description">Tecnologia que permite controlar o computador através do movimento dos olhos.</p>
+                        <ul class="tech-features">
+                            <li>Controle por movimento ocular</li>
+                            <li>Ideal para limitações motoras severas</li>
+                            <li>Precisão crescente</li>
+                            <li>Integração com softwares</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Aplicações:</h4>
+                            <p>Usado por pessoas com ELA, paralisia cerebral e outras condições que limitam o movimento.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🎤</span>
+                        <h3 class="tech-title">Comandos de Voz</h3>
+                        <p class="tech-description">Controle por voz que permite navegar e interagir usando comandos falados.</p>
+                        <ul class="tech-features">
+                            <li>Navegação por comandos</li>
+                            <li>Ditado de texto</li>
+                            <li>Controle de aplicações</li>
+                            <li>Personalização de comandos</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Experimente:</h4>
+                            <button class="demo-button" onclick="activateVoiceCommands()">Ativar Comandos de Voz</button>
+                            <p><small>Diga "ir para sobre" ou "ativar alto contraste"</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Assistance -->
+        <section class="category-section" aria-labelledby="visual-title">
+            <div class="container">
+                <div class="category-header">
+                    <h2 id="visual-title" class="category-title">Assistência Visual</h2>
+                    <p>Tecnologias que ajudam pessoas com deficiência visual ou baixa visão</p>
+                </div>
+                
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🔍</span>
+                        <h3 class="tech-title">Magnificadores de Tela</h3>
+                        <p class="tech-description">Ampliam partes da tela para pessoas com baixa visão.</p>
+                        <ul class="tech-features">
+                            <li>Zoom até 16x ou mais</li>
+                            <li>Diferentes modos de visualização</li>
+                            <li>Seguimento do cursor</li>
+                            <li>Filtros de cor</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Teste:</h4>
+                            <button class="demo-button" onclick="demonstrateMagnifier()">Ativar Lupa</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🌓</span>
+                        <h3 class="tech-title">Alto Contraste</h3>
+                        <p class="tech-description">Melhora a legibilidade através de cores contrastantes.</p>
+                        <ul class="tech-features">
+                            <li>Reduz fadiga visual</li>
+                            <li>Melhora legibilidade</li>
+                            <li>Ajuda com daltonismo</li>
+                            <li>Personalizável</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Experimente:</h4>
+                            <button class="demo-button" onclick="toggleHighContrast()">Alternar Alto Contraste</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-card">
+                        <span class="tech-icon" aria-hidden="true">🎨</span>
+                        <h3 class="tech-title">Filtros de Cor</h3>
+                        <p class="tech-description">Ajustam cores para pessoas com daltonismo ou sensibilidade à luz.</p>
+                        <ul class="tech-features">
+                            <li>Correção de daltonismo</li>
+                            <li>Redução de luz azul</li>
+                            <li>Inversão de cores</li>
+                            <li>Filtros personalizados</li>
+                        </ul>
+                        <div class="demo-section">
+                            <h4>Filtros disponíveis:</h4>
+                            <button class="demo-button" onclick="applyColorFilter('grayscale')">Escala de Cinza</button>
+                            <button class="demo-button" onclick="applyColorFilter('sepia')">Sépia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Guide -->
+        <section class="implementation-guide" aria-labelledby="guide-title">
+            <div class="container">
+                <h2 id="guide-title" class="section-title text-white">Como Implementar Acessibilidade</h2>
+                <p class="text-white">Guia prático para desenvolvedores implementarem recursos de acessibilidade</p>
+                
+                <div class="guide-grid">
+                    <div class="guide-step">
+                        <div class="step-number">1</div>
+                        <h3>HTML Semântico</h3>
+                        <p>Use elementos HTML apropriados (header, nav, main, section, article) e atributos ARIA quando necessário.</p>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">2</div>
+                        <h3>Navegação por Teclado</h3>
+                        <p>Garanta que todos os elementos interativos sejam acessíveis via teclado com ordem lógica de foco.</p>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">3</div>
+                        <h3>Contraste e Cores</h3>
+                        <p>Mantenha contraste mínimo de 4.5:1 para texto normal e 3:1 para texto grande. Não use apenas cor para informação.</p>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">4</div>
+                        <h3>Textos Alternativos</h3>
+                        <p>Forneça descrições significativas para imagens, gráficos e outros conteúdos visuais.</p>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">5</div>
+                        <h3>Formulários Acessíveis</h3>
+                        <p>Use labels apropriados, instruções claras e mensagens de erro descritivas.</p>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">6</div>
+                        <h3>Teste e Validação</h3>
+                        <p>Teste com leitores de tela, navegação por teclado e ferramentas de validação de acessibilidade.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="section section-gray" aria-labelledby="resources-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="resources-title" class="section-title">Recursos e Ferramentas</h2>
+                    <p class="section-subtitle">Links úteis para aprender e implementar acessibilidade</p>
+                </div>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">📚</div>
+                        <h3>WCAG 2.1</h3>
+                        <p>Diretrizes oficiais de acessibilidade para conteúdo web.</p>
+                        <a href="https://www.w3.org/WAI/WCAG21/quickref/" class="resource-link" target="_blank" rel="noopener">Acessar Guia</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">🔧</div>
+                        <h3>axe DevTools</h3>
+                        <p>Extensão para navegador que identifica problemas de acessibilidade.</p>
+                        <a href="https://www.deque.com/axe/devtools/" class="resource-link" target="_blank" rel="noopener">Baixar Extensão</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">🎯</div>
+                        <h3>WAVE</h3>
+                        <p>Ferramenta online para avaliar acessibilidade de páginas web.</p>
+                        <a href="https://wave.webaim.org/" class="resource-link" target="_blank" rel="noopener">Testar Site</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">🎨</div>
+                        <h3>Colour Contrast Analyser</h3>
+                        <p>Ferramenta para verificar contraste de cores.</p>
+                        <a href="https://www.tpgi.com/color-contrast-checker/" class="resource-link" target="_blank" rel="noopener">Verificar Contraste</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">📖</div>
+                        <h3>MDN Accessibility</h3>
+                        <p>Documentação completa sobre acessibilidade web.</p>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility" class="resource-link" target="_blank" rel="noopener">Ler Documentação</a>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon" aria-hidden="true">🏛️</div>
+                        <h3>Lei Brasileira de Inclusão</h3>
+                        <p>Legislação brasileira sobre acessibilidade digital.</p>
+                        <a href="http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm" class="resource-link" target="_blank" rel="noopener">Ver Lei</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="section section-primary" aria-labelledby="cta-title">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 id="cta-title" class="section-title text-white">Comece a Implementar Hoje</h2>
+                    <p class="text-white">Use nossos recursos e junte-se à comunidade para criar experiências mais inclusivas.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="comunidade.html" class="btn btn-secondary">Participar da Comunidade</a>
+                        <a href="feedback.html" class="btn btn-outline-white">Compartilhar Experiência</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    
+    <script>
+        // Technology demonstration functions
+        function demonstrateScreenReader(type) {
+            if (typeof announceToScreenReader === 'function') {
+                announceToScreenReader(`Demonstrando ${type}: Este é um exemplo de como um leitor de tela lê o conteúdo da página. O ${type} converteria este texto em fala para usuários cegos ou com baixa visão.`);
+            } else {
+                alert(`Demonstração do ${type}: Este leitor de tela converteria todo o texto da página em fala, permitindo que pessoas cegas naveguem e interajam com o conteúdo.`);
+            }
+        }
+        
+        function demonstrateKeyboardNav() {
+            alert('Demonstração de Navegação por Teclado:\n\n• Pressione Tab para avançar entre elementos\n• Shift+Tab para voltar\n• Enter ou Espaço para ativar botões/links\n• Setas para navegar em menus\n\nTente navegar por esta página usando apenas o teclado!');
+            
+            // Highlight focusable elements temporarily
+            const focusableElements = document.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            focusableElements.forEach(el => {
+                el.style.outline = '3px solid #007bff';
+                setTimeout(() => {
+                    el.style.outline = '';
+                }, 3000);
+            });
+        }
+        
+        function activateVoiceCommands() {
+            if (typeof initVoiceCommands === 'function') {
+                initVoiceCommands();
+                alert('Comandos de voz ativados! Experimente dizer:\n\n• "ir para sobre"\n• "ativar alto contraste"\n• "ler página"\n• "abrir menu"\n• "fechar chatbot"');
+            } else {
+                alert('Comandos de voz não disponíveis neste navegador. Esta funcionalidade requer um navegador moderno com suporte à Web Speech API.');
+            }
+        }
+        
+        function demonstrateMagnifier() {
+            document.body.style.transform = 'scale(1.5)';
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transition = 'transform 0.3s ease';
+            
+            alert('Lupa ativada! Esta é uma simulação de como um magnificador de tela funciona.');
+            
+            setTimeout(() => {
+                document.body.style.transform = '';
+            }, 5000);
+        }
+        
+        function toggleHighContrast() {
+            if (typeof toggleHighContrastMode === 'function') {
+                toggleHighContrastMode();
+            } else {
+                document.body.classList.toggle('high-contrast');
+            }
+        }
+        
+        function applyColorFilter(filter) {
+            document.body.style.filter = filter === 'grayscale' ? 'grayscale(100%)' : 
+                                       filter === 'sepia' ? 'sepia(100%)' : '';
+            
+            setTimeout(() => {
+                document.body.style.filter = '';
+            }, 3000);
+            
+            if (typeof announceToScreenReader === 'function') {
+                announceToScreenReader(`Filtro ${filter} aplicado temporariamente`);
+            }
+        }
+    </script>
+</body>
+</html>

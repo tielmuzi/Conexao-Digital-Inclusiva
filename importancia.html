@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importância da Acessibilidade - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Entenda por que a acessibilidade digital é fundamental e experimente nosso simulador de dificuldades.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles/main.css" as="style">
+    <link rel="preload" href="styles/accessibility.css" as="style">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Importância da Acessibilidade - Conexão Digital Inclusiva">
+    <meta property="og:description" content="Descubra por que a acessibilidade digital é essencial e experimente nosso simulador interativo.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://conexaodigitalinclusiva.com/importancia">
+    
+    <style>
+        /* Simulator specific styles */
+        .simulator-container {
+            background: var(--background-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .simulator-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .simulator-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 500;
+        }
+        
+        .simulator-btn:hover,
+        .simulator-btn:focus {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .simulator-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .demo-content {
+            background: #111827;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Simulation effects */
+        .sim-blur {
+            filter: blur(2px);
+        }
+        
+        .sim-low-vision {
+            filter: blur(1px) contrast(0.5);
+        }
+        
+        .sim-colorblind {
+            filter: grayscale(100%);
+        }
+        
+        .sim-motor {
+            pointer-events: none;
+        }
+        
+        .sim-motor * {
+            cursor: not-allowed !important;
+        }
+        
+        .sim-cognitive {
+            animation: cognitive-difficulty 2s infinite;
+        }
+        
+        @keyframes cognitive-difficulty {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .sim-dyslexia {
+            font-family: 'Comic Sans MS', cursive;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+        
+        .sim-dyslexia p {
+            animation: dyslexia-shake 0.1s infinite;
+        }
+        
+        @keyframes dyslexia-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-1px); }
+            75% { transform: translateX(1px); }
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .comparison-card {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .comparison-card.inaccessible {
+            border-color: var(--error-color);
+        }
+        
+        .comparison-card.accessible {
+            border-color: var(--success-color);
+        }
+        
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .comparison-icon {
+            font-size: 1.5rem;
+        }
+        
+        .stats-highlight {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .benefit-card {
+            background: #111827;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .benefit-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .simulator-controls {
+                flex-direction: column;
+            }
+            
+            .simulator-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero hero-secondary" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">Por Que a Acessibilidade Importa?</h1>
+                    <p class="hero-subtitle">Descubra o impacto real da acessibilidade digital na vida das pessoas</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="section" aria-labelledby="stats-title">
+            <div class="container">
+                <div class="stats-highlight">
+                    <h2 id="stats-title" class="section-title">Dados que Importam</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">1.3B</div>
+                            <p>pessoas no mundo têm alguma deficiência</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">15%</div>
+                            <p>da população mundial</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">70%</div>
+                            <p>dos sites têm barreiras de acessibilidade</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">$13T</div>
+                            <p>poder de compra anual das pessoas com deficiência</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulator Section -->
+        <section class="section section-gray" aria-labelledby="simulator-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="simulator-title" class="section-title">Simulador de Dificuldades</h2>
+                    <p class="section-subtitle">Experimente como diferentes pessoas podem enfrentar barreiras digitais</p>
+                </div>
+                
+                <div class="simulator-container">
+                    <div class="simulator-controls" role="group" aria-labelledby="simulator-controls-title">
+                        <h3 id="simulator-controls-title" class="sr-only">Controles do Simulador</h3>
+                        <button class="simulator-btn" data-simulation="none" aria-pressed="true">Normal</button>
+                        <button class="simulator-btn" data-simulation="blur" aria-pressed="false">Baixa Visão</button>
+                        <button class="simulator-btn" data-simulation="colorblind" aria-pressed="false">Daltonismo</button>
+                        <button class="simulator-btn" data-simulation="motor" aria-pressed="false">Dificuldade Motora</button>
+                        <button class="simulator-btn" data-simulation="dyslexia" aria-pressed="false">Dislexia</button>
+                        <button class="simulator-btn" data-simulation="cognitive" aria-pressed="false">Dificuldade Cognitiva</button>
+                    </div>
+                    
+                    <div id="demo-content" class="demo-content" role="region" aria-labelledby="demo-title">
+                        <h3 id="demo-title">Exemplo de Conteúdo Web</h3>
+                        <p>Este é um exemplo de como o conteúdo pode ser afetado por diferentes condições. Clique nos botões acima para simular diferentes dificuldades.</p>
+                        
+                        <div style="display: flex; gap: 10px; margin: 20px 0;">
+                            <button style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Botão Azul</button>
+                            <button style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Botão Verde</button>
+                            <button style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Botão Vermelho</button>
+                        </div>
+                        
+                        <p>Texto com <a href="#" style="color: #007bff;">links em azul</a> e <span style="color: #6c757d;">texto em cinza</span> que pode ser difícil de distinguir para algumas pessoas.</p>
+                        
+                        <form style="margin-top: 20px;">
+                            <label for="demo-input">Campo de entrada:</label>
+                            <input type="text" id="demo-input" placeholder="Digite algo aqui" style="margin-left: 10px; padding: 5px;">
+                        </form>
+                    </div>
+                    
+                    <div class="simulator-info" role="region" aria-live="polite" aria-labelledby="simulation-info">
+                        <h4 id="simulation-info">Informações da Simulação</h4>
+                        <p id="simulation-description">Visualização normal. Selecione uma simulação acima para ver como diferentes pessoas podem experimentar este conteúdo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section class="section" aria-labelledby="comparison-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="comparison-title" class="section-title">Site Inacessível vs. Acessível</h2>
+                    <p class="section-subtitle">Veja a diferença que a acessibilidade faz</p>
+                </div>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card inaccessible">
+                        <div class="comparison-header">
+                            <span class="comparison-icon" aria-hidden="true">❌</span>
+                            <h3>Site Inacessível</h3>
+                        </div>
+                        <ul>
+                            <li>Imagens sem texto alternativo</li>
+                            <li>Contraste de cores inadequado</li>
+                            <li>Navegação apenas com mouse</li>
+                            <li>Formulários sem rótulos</li>
+                            <li>Vídeos sem legendas</li>
+                            <li>Texto muito pequeno</li>
+                            <li>Links genéricos ("clique aqui")</li>
+                            <li>Estrutura HTML inadequada</li>
+                        </ul>
+                        <p><strong>Resultado:</strong> Exclui milhões de usuários e pode gerar problemas legais.</p>
+                    </div>
+                    
+                    <div class="comparison-card accessible">
+                        <div class="comparison-header">
+                            <span class="comparison-icon" aria-hidden="true">✅</span>
+                            <h3>Site Acessível</h3>
+                        </div>
+                        <ul>
+                            <li>Imagens com descrições detalhadas</li>
+                            <li>Alto contraste e cores adequadas</li>
+                            <li>Navegação completa por teclado</li>
+                            <li>Formulários com rótulos claros</li>
+                            <li>Vídeos com legendas e audiodescrição</li>
+                            <li>Texto redimensionável</li>
+                            <li>Links descritivos e contextuais</li>
+                            <li>HTML semântico e estruturado</li>
+                        </ul>
+                        <p><strong>Resultado:</strong> Inclui todos os usuários e melhora a experiência geral.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="section section-gray" aria-labelledby="benefits-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="benefits-title" class="section-title">Benefícios da Acessibilidade</h2>
+                    <p class="section-subtitle">A acessibilidade beneficia a todos, não apenas pessoas com deficiência</p>
+                </div>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">👥</div>
+                        <h3>Inclusão Social</h3>
+                        <p>Garante que todas as pessoas possam participar plenamente da sociedade digital, promovendo igualdade de oportunidades.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">💼</div>
+                        <h3>Vantagem Competitiva</h3>
+                        <p>Empresas acessíveis alcançam um mercado maior, melhoram sua reputação e evitam riscos legais.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">🚀</div>
+                        <h3>Melhor UX para Todos</h3>
+                        <p>Recursos de acessibilidade como legendas, navegação clara e design responsivo beneficiam todos os usuários.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">⚖️</div>
+                        <h3>Conformidade Legal</h3>
+                        <p>Atende a leis de acessibilidade como a LBI (Lei Brasileira de Inclusão) e evita processos judiciais.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">🔍</div>
+                        <h3>Melhor SEO</h3>
+                        <p>Práticas de acessibilidade como HTML semântico e textos alternativos melhoram o ranking nos buscadores.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">💡</div>
+                        <h3>Inovação</h3>
+                        <p>Pensar em acessibilidade estimula soluções criativas que frequentemente beneficiam todos os usuários.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="section section-primary" aria-labelledby="cta-title">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 id="cta-title" class="section-title text-white">Pronto para Tornar Seu Site Acessível?</h2>
+                    <p class="text-white">Explore nossas tecnologias e recursos para implementar acessibilidade em seus projetos.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="tecnologias.html" class="btn btn-secondary">Ver Tecnologias</a>
+                        <a href="comunidade.html" class="btn btn-outline-white">Participar da Comunidade</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    
+    <script>
+        // Simulator functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const simulatorButtons = document.querySelectorAll('.simulator-btn');
+            const demoContent = document.getElementById('demo-content');
+            const simulationDescription = document.getElementById('simulation-description');
+            
+            const simulations = {
+                none: {
+                    class: '',
+                    description: 'Visualização normal. Este é como a maioria das pessoas vê o conteúdo web.'
+                },
+                blur: {
+                    class: 'sim-blur',
+                    description: 'Simulação de baixa visão. Pessoas com esta condição podem ter dificuldade para ver detalhes e texto pequeno.'
+                },
+                colorblind: {
+                    class: 'sim-colorblind',
+                    description: 'Simulação de daltonismo. Pessoas com daltonismo podem ter dificuldade para distinguir certas cores.'
+                },
+                motor: {
+                    class: 'sim-motor',
+                    description: 'Simulação de dificuldade motora. Pessoas com limitações motoras podem ter dificuldade para usar o mouse.'
+                },
+                dyslexia: {
+                    class: 'sim-dyslexia',
+                    description: 'Simulação de dislexia. Pessoas com dislexia podem ter dificuldade para ler texto em certas fontes e espaçamentos.'
+                },
+                cognitive: {
+                    class: 'sim-cognitive',
+                    description: 'Simulação de dificuldade cognitiva. Pessoas com estas condições podem ter dificuldade com conteúdo que muda ou pisca.'
+                }
+            };
+            
+            simulatorButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const simulation = this.dataset.simulation;
+                    
+                    // Update button states
+                    simulatorButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                    
+                    this.classList.add('active');
+                    this.setAttribute('aria-pressed', 'true');
+                    
+                    // Apply simulation
+                    demoContent.className = 'demo-content';
+                    if (simulations[simulation].class) {
+                        demoContent.classList.add(simulations[simulation].class);
+                    }
+                    
+                    // Update description
+                    simulationDescription.textContent = simulations[simulation].description;
+                    
+                    // Announce change to screen readers
+                    if (typeof announceToScreenReader === 'function') {
+                        announceToScreenReader(`Simulação alterada para: ${this.textContent}. ${simulations[simulation].description}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

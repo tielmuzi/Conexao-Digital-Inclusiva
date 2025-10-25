@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODS 10 - Redução das Desigualdades - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Como a acessibilidade digital contribui para o ODS 10 - Redução das Desigualdades da ONU.">
+    
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="ODS 10 - Redução das Desigualdades">
+    <meta property="og:description" content="Descubra como a acessibilidade digital contribui para reduzir desigualdades.">
+    
+    
+    <style>
+        .ods-hero {
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        
+        .ods-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: var(--spacing-md);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .ods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .ods-card {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-color);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .ods-card:hover,
+        .ods-card:focus-within {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .ods-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .targets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .target-card {
+            background: var(--background-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .target-number {
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .progress-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .progress-item {
+            background: rgba(255,255,255,0.1);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin: var(--spacing-md) 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #4caf50;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 2s ease;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .action-card {
+            background: #111827;
+            border: 2px solid var(--primary-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .action-card:hover,
+        .action-card:focus-within {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .action-card:hover .action-icon,
+        .action-card:focus-within .action-icon {
+            transform: scale(1.1);
+        }
+        
+        .action-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            transition: transform var(--transition-fast);
+        }
+        
+        .timeline {
+            position: relative;
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: calc(50% - var(--spacing-lg));
+            border: 1px solid var(--border-color);
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: var(--spacing-lg);
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            border: 3px solid white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .timeline-year {
+            background: var(--primary-color);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .ods-number {
+                font-size: 3rem;
+            }
+            
+            .timeline::before {
+                left: var(--spacing-lg);
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+                padding-left: calc(var(--spacing-lg) * 2);
+            }
+            
+            .timeline-content {
+                width: 100%;
+            }
+            
+            .timeline-marker {
+                left: var(--spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+     <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="ods-hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="ods-number" aria-hidden="true">ODS 10</div>
+                <h1 id="hero-title" class="hero-title">Redução das Desigualdades</h1>
+                <p class="hero-subtitle">Como a acessibilidade digital contribui para um mundo mais igualitário</p>
+            </div>
+        </section>
+
+        <!-- ODS Overview -->
+        <section class="section" aria-labelledby="overview-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="overview-title" class="section-title">O que é o ODS 10?</h2>
+                    <p class="section-subtitle">Reduzir as desigualdades dentro dos países e entre eles</p>
+                </div>
+                
+                <div class="ods-grid">
+                    <div class="ods-card">
+                        <span class="ods-icon" aria-hidden="true">🎯</span>
+                        <h3>Objetivo Principal</h3>
+                        <p>Reduzir as desigualdades de renda, bem como aquelas baseadas em idade, sexo, deficiência, raça, etnia, origem, religião, condição econômica ou outra condição.</p>
+                    </div>
+                    
+                    <div class="ods-card">
+                        <span class="ods-icon" aria-hidden="true">🌐</span>
+                        <h3>Inclusão Digital</h3>
+                        <p>A acessibilidade digital é fundamental para garantir que pessoas com deficiência tenham as mesmas oportunidades de participação na sociedade digital.</p>
+                    </div>
+                    
+                    <div class="ods-card">
+                        <span class="ods-icon" aria-hidden="true">⚖️</span>
+                        <h3>Igualdade de Oportunidades</h3>
+                        <p>Promover a igualdade de oportunidades e reduzir as desigualdades de resultados, inclusive por meio da eliminação de leis, políticas e práticas discriminatórias.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="section section-gray" aria-labelledby="stats-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="stats-title" class="section-title">Desigualdades Digitais no Brasil</h2>
+                    <p class="section-subtitle">Dados que mostram a importância da acessibilidade digital</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">45 milhões</div>
+                        <div class="stat-label">Pessoas com deficiência no Brasil</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Sites brasileiros com barreiras de acessibilidade</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">67%</div>
+                        <div class="stat-label">Pessoas com deficiência sem acesso à internet</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">R$ 40 bi</div>
+                        <div class="stat-label">Potencial econômico perdido por exclusão digital</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Targets -->
+        <section class="section" aria-labelledby="targets-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="targets-title" class="section-title">Metas do ODS 10 e Acessibilidade</h2>
+                    <p class="section-subtitle">Como a acessibilidade digital contribui para cada meta</p>
+                </div>
+                
+                <div class="targets-grid">
+                    <div class="target-card">
+                        <div class="target-number">10.2</div>
+                        <h3>Empoderamento e Inclusão</h3>
+                        <p>Empoderar e promover a inclusão social, econômica e política de todos, independentemente da idade, gênero, deficiência, raça, etnia, origem, religião, condição econômica ou outra condição.</p>
+                        <div class="target-connection">
+                            <strong>Conexão com Acessibilidade:</strong> Sites e aplicações acessíveis garantem que pessoas com deficiência possam participar plenamente da economia digital.
+                        </div>
+                    </div>
+                    
+                    <div class="target-card">
+                        <div class="target-number">10.3</div>
+                        <h3>Igualdade de Oportunidades</h3>
+                        <p>Garantir a igualdade de oportunidades e reduzir as desigualdades de resultados, inclusive por meio da eliminação de leis, políticas e práticas discriminatórias.</p>
+                        <div class="target-connection">
+                            <strong>Conexão com Acessibilidade:</strong> Leis como a Lei Brasileira de Inclusão e WCAG 2.1 estabelecem padrões para eliminar barreiras digitais.
+                        </div>
+                    </div>
+                    
+                    <div class="target-card">
+                        <div class="target-number">10.4</div>
+                        <h3>Políticas Fiscais e Sociais</h3>
+                        <p>Adotar políticas, especialmente fiscal, salarial e de proteção social, e alcançar progressivamente maior igualdade.</p>
+                        <div class="target-connection">
+                            <strong>Conexão com Acessibilidade:</strong> Investimentos públicos em tecnologias assistivas e capacitação digital reduzem desigualdades.
+                        </div>
+                    </div>
+                    
+                    <div class="target-card">
+                        <div class="target-number">10.c</div>
+                        <h3>Redução de Custos</h3>
+                        <p>Reduzir para menos de 3% os custos de transação de remessas dos migrantes e eliminar corredores de remessas com custos superiores a 5%.</p>
+                        <div class="target-connection">
+                            <strong>Conexão com Acessibilidade:</strong> Plataformas financeiras acessíveis permitem que pessoas com deficiência acessem serviços bancários digitais com menores custos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section" aria-labelledby="progress-title">
+            <div class="container">
+                <h2 id="progress-title" class="section-title text-white">Progresso da Acessibilidade Digital no Brasil</h2>
+                <p class="text-white">Acompanhe os avanços e desafios na implementação da acessibilidade digital</p>
+                
+                <div class="progress-grid">
+                    <div class="progress-item">
+                        <h3>Legislação</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <p>85% - Lei Brasileira de Inclusão implementada, mas fiscalização ainda limitada</p>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <h3>Sites Governamentais</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <p>45% - Melhoria gradual, mas ainda muitas barreiras</p>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <h3>Setor Privado</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                        <p>25% - Crescimento lento, necessita mais conscientização</p>
+                    </div>
+                    
+                    <div class="progress-item">
+                        <h3>Educação Digital</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 35%"></div>
+                        </div>
+                        <p>35% - Programas de capacitação em expansão</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="section" aria-labelledby="timeline-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="timeline-title" class="section-title">Marcos da Acessibilidade Digital</h2>
+                    <p class="section-subtitle">Principais conquistas e marcos legislativos</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2004</div>
+                            <h3>Decreto 5.296</h3>
+                            <p>Estabelece normas gerais e critérios básicos para a promoção da acessibilidade das pessoas portadoras de deficiência ou com mobilidade reduzida.</p>
+                        </div>
+                        <div class="timeline-marker"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2015</div>
+                            <h3>Lei Brasileira de Inclusão</h3>
+                            <p>Lei 13.146 estabelece a obrigatoriedade de acessibilidade em sites e aplicações, com prazo para adequação.</p>
+                        </div>
+                        <div class="timeline-marker"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2018</div>
+                            <h3>WCAG 2.1</h3>
+                            <p>Publicação das diretrizes de acessibilidade mais atualizadas, adotadas como referência no Brasil.</p>
+                        </div>
+                        <div class="timeline-marker"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2021</div>
+                            <h3>Marco Legal da Internet</h3>
+                            <p>Regulamentação específica sobre acessibilidade digital em plataformas e serviços online.</p>
+                        </div>
+                        <div class="timeline-marker"></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2024</div>
+                            <h3>Futuro da Inclusão</h3>
+                            <p>Metas para 2030: 100% dos sites governamentais acessíveis e 70% do setor privado em conformidade.</p>
+                        </div>
+                        <div class="timeline-marker"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <section class="section section-gray" aria-labelledby="actions-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="actions-title" class="section-title">Como Contribuir para o ODS 10</h2>
+                    <p class="section-subtitle">Ações práticas para reduzir desigualdades digitais</p>
+                </div>
+                
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">👩‍💻</div>
+                        <h3>Desenvolvedores</h3>
+                        <p>Implemente padrões de acessibilidade em seus projetos e aprenda sobre WCAG 2.1.</p>
+                        <a href="tecnologias.html" class="btn btn-primary">Aprender Mais</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">🏢</div>
+                        <h3>Empresas</h3>
+                        <p>Adote políticas de inclusão digital e torne seus produtos acessíveis a todos.</p>
+                        <a href="feedback.html" class="btn btn-primary">Compartilhar Experiência</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">🎓</div>
+                        <h3>Educadores</h3>
+                        <p>Inclua acessibilidade digital em currículos e capacite novos profissionais.</p>
+                        <a href="comunidade.html" class="btn btn-primary">Participar da Comunidade</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">🏛️</div>
+                        <h3>Gestores Públicos</h3>
+                        <p>Implemente políticas públicas que promovam a inclusão digital.</p>
+                        <a href="sobre.html" class="btn btn-primary">Conhecer Projeto</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">🤝</div>
+                        <h3>Sociedade Civil</h3>
+                        <p>Cobre acessibilidade de organizações e apoie iniciativas inclusivas.</p>
+                        <a href="comunidade.html" class="btn btn-primary">Engajar-se</a>
+                    </div>
+                    
+                    <div class="action-card">
+                        <div class="action-icon" aria-hidden="true">📊</div>
+                        <h3>Pesquisadores</h3>
+                        <p>Contribua com dados e pesquisas sobre inclusão digital no Brasil.</p>
+                        <a href="feedback.html" class="btn btn-primary">Colaborar</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="section section-primary" aria-labelledby="cta-title">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 id="cta-title" class="section-title text-white">Juntos por um Brasil Mais Inclusivo</h2>
+                    <p class="text-white">A redução das desigualdades digitais é responsabilidade de todos. Faça parte desta transformação.</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="comunidade.html" class="btn btn-secondary">Participar da Comunidade</a>
+                        <a href="feedback.html" class="btn btn-outline-white">Compartilhar Sua História</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    
+    <script>
+        // Animate progress bars when they come into view
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const width = entry.target.style.width;
+                        entry.target.style.width = '0%';
+                        setTimeout(() => {
+                            entry.target.style.width = width;
+                        }, 100);
+                    }
+                });
+            });
+            
+            progressBars.forEach(bar => observer.observe(bar));
+        }
+        
+        // Initialize animations when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            animateProgressBars();
+        });
+        
+        // Add keyboard navigation for timeline
+        document.addEventListener('keydown', (e) => {
+            if (e.target.classList.contains('timeline-content')) {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const nextItem = e.target.closest('.timeline-item').nextElementSibling;
+                    if (nextItem) {
+                        nextItem.querySelector('.timeline-content').focus();
+                    }
+                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const prevItem = e.target.closest('.timeline-item').previousElementSibling;
+                    if (prevItem) {
+                        prevItem.querySelector('.timeline-content').focus();
+                    }
+                }
+            }
+        });
+        
+        // Make timeline items focusable for keyboard navigation
+        document.querySelectorAll('.timeline-content').forEach(item => {
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('role', 'article');
+        });
+    </script>
+</body>
+</html>

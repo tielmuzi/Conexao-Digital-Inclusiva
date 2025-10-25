@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Painel administrativo para gerenciamento de dados e configurações da plataforma Conexão Digital Inclusiva.">
+    
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Supabase CDN -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* Admin specific styles */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-nav button {
+            background: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav button.active,
+        .admin-nav button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .admin-section {
+            display: none;
+            background: #111827;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-export {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-stat-card {
+            background: linear-gradient(135deg, #78367b, #02b9d4);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .admin-stat-card h4 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .admin-stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .config-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border: 1px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-nav {
+                flex-direction: column;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .data-table {
+                font-size: 0.8rem;
+            }
+
+            .modal-content {
+                margin: 2% auto;
+                padding: 1rem;
+            }
+        }
+
+        /* Loading states */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Login Modal Styles */
+        .login-modal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+            display: flex !important; /* Always visible initially */
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 99999 !important;
+        }
+
+        .login-modal.hide {
+            display: none !important; /* Hide when authenticated */
+        }
+
+        .login-content {
+            background: rgb(66, 66, 66);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .login-form .form-group {
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .login-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #2563eb;
+        }
+
+        .login-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .login-error {
+            background: #fee2e2;
+            border: 1px solid #dc2626;
+            color: #991b1b;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .back-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Logout button */
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    
+    
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="login-modal">
+        <div class="login-content">
+            <div class="login-header">
+                <h2>🔐 Acesso Administrativo</h2>
+                <p>Digite suas credenciais para acessar o painel</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="admin-username">Usuário:</label>
+                    <input type="text" id="admin-username" name="username" required 
+                           placeholder="Digite seu usuário" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Senha:</label>
+                    <input type="password" id="admin-password" name="password" required 
+                           placeholder="Digite sua senha" autocomplete="current-password">
+                </div>
+                <div id="login-error" class="login-error" style="display: none;"></div>
+                <button type="submit" class="login-btn">Entrar</button>
+                <div class="login-footer">
+                    <a href="index.html" class="back-link">← Voltar ao site</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main" style="display: none;">
+        <div class="admin-container">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <h1>Painel Administrativo</h1>
+                <p>Gerenciamento de dados e configurações da plataforma</p>
+                <div style="margin-top: 1rem;">
+                    <button id="back-to-site" class="btn-export" onclick="window.location.href='index.html'">
+                        ← Voltar ao Site
+                    </button>
+                    <button id="logout-btn" class="logout-btn" onclick="adminAuth.logout()">
+                        🚪 Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="admin-nav" role="navigation" aria-label="Navegação administrativa">
+                <button class="nav-btn active" data-section="overview">Visão Geral</button>
+                <button class="nav-btn" data-section="feedback">Feedbacks</button>
+                <button class="nav-btn" data-section="questionnaire">Questionários</button>
+                <button class="nav-btn" data-section="analytics">Analytics</button>
+                <button class="nav-btn" data-section="config">Configurações</button>
+            </nav>
+
+            <!-- Alert Container -->
+            <div id="alert-container"></div>
+
+            <!-- Overview Section -->
+            <section id="overview-section" class="admin-section active">
+                <h2>Visão Geral do Sistema</h2>
+                
+                <div class="stats-grid">
+                    <div class="admin-stat-card">
+                        <h4>Total de Feedbacks</h4>
+                        <div class="admin-stat-value" id="overview-feedbacks">0</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h4>Questionários Respondidos</h4>
+                        <div class="admin-stat-value" id="overview-questionnaires">0</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h4>Avaliação Média</h4>
+                        <div class="admin-stat-value" id="overview-rating">0.0</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h4>Status do Sistema</h4>
+                        <div class="admin-stat-value" id="system-status" style="font-size: 1.2rem;">🟢 Online</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Ações Rápidas</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-export" onclick="adminPanel.exportAllData()">
+                            📊 Exportar Todos os Dados
+                        </button>
+                        <button class="btn-view" onclick="adminPanel.refreshAllData()">
+                            🔄 Atualizar Dados
+                        </button>
+                        <button class="btn-small" onclick="adminPanel.testDatabaseConnection()">
+                            🔗 Testar Conexão
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feedback Section -->
+            <section id="feedback-section" class="admin-section">
+                <h2>Gerenciamento de Feedbacks</h2>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="feedback-type-filter">Tipo</label>
+                        <select id="feedback-type-filter">
+                            <option value="">Todos</option>
+                            <option value="sugestao">Sugestão</option>
+                            <option value="problema">Problema</option>
+                            <option value="elogio">Elogio</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="feedback-rating-filter">Avaliação</label>
+                        <select id="feedback-rating-filter">
+                            <option value="">Todas</option>
+                            <option value="5">5 estrelas</option>
+                            <option value="4">4 estrelas</option>
+                            <option value="3">3 estrelas</option>
+                            <option value="2">2 estrelas</option>
+                            <option value="1">1 estrela</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="feedback-date-filter">Data</label>
+                        <input type="date" id="feedback-date-filter">
+                    </div>
+                    <button class="btn-view" onclick="adminPanel.applyFeedbackFilters()">
+                        Filtrar
+                    </button>
+                    <button class="btn-export" onclick="adminPanel.exportFeedbacks()">
+                        Exportar CSV
+                    </button>
+                </div>
+
+                <div style="position: relative;">
+                    <table class="data-table" id="feedback-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Tipo</th>
+                                <th>Avaliação</th>
+                                <th>Mensagem</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedback-tbody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">
+                                    Carregando dados...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="feedback-loading" class="loading-overlay" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <div class="pagination" id="feedback-pagination"></div>
+            </section>
+
+            <!-- Questionnaire Section -->
+            <section id="questionnaire-section" class="admin-section">
+                <h2>Respostas dos Questionários</h2>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="disability-filter">Tipo de Deficiência</label>
+                        <select id="disability-filter">
+                            <option value="">Todos</option>
+                            <option value="visual">Visual</option>
+                            <option value="auditiva">Auditiva</option>
+                            <option value="motora">Motora</option>
+                            <option value="cognitiva">Cognitiva</option>
+                            <option value="multipla">Múltipla</option>
+                            <option value="nenhuma">Nenhuma</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="barriers-filter">Frequência de Barreiras</label>
+                        <select id="barriers-filter">
+                            <option value="">Todas</option>
+                            <option value="sempre">Sempre</option>
+                            <option value="frequentemente">Frequentemente</option>
+                            <option value="as-vezes">Às vezes</option>
+                            <option value="raramente">Raramente</option>
+                            <option value="nunca">Nunca</option>
+                        </select>
+                    </div>
+                    <button class="btn-view" onclick="adminPanel.applyQuestionnaireFilters()">
+                        Filtrar
+                    </button>
+                    <button class="btn-export" onclick="adminPanel.exportQuestionnaires()">
+                        Exportar CSV
+                    </button>
+                </div>
+
+                <div style="position: relative;">
+                    <table class="data-table" id="questionnaire-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Nome</th>
+                                <th>Tipo de Deficiência</th>
+                                <th>Problemas Comuns</th>
+                                <th>Avaliação do Site</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionnaire-tbody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">
+                                    Carregando dados...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="questionnaire-loading" class="loading-overlay" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <div class="pagination" id="questionnaire-pagination"></div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="admin-section">
+                <h2>Analytics e Relatórios</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h3>Tendências de Feedback</h3>
+                        <canvas id="feedback-trend-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div>
+                        <h3>Distribuição de Deficiências</h3>
+                        <canvas id="disability-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div>
+                        <h3>Uso de Tecnologias Assistivas</h3>
+                        <canvas id="tech-usage-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div>
+                        <h3>Barreiras Mais Comuns</h3>
+                        <canvas id="barriers-chart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Relatórios Personalizados</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                        <button class="btn-export" onclick="adminPanel.generateReport('monthly')">
+                            📈 Relatório Mensal
+                        </button>
+                        <button class="btn-export" onclick="adminPanel.generateReport('accessibility')">
+                            ♿ Relatório de Acessibilidade
+                        </button>
+                        <button class="btn-export" onclick="adminPanel.generateReport('user-satisfaction')">
+                            😊 Satisfação do Usuário
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="config-section" class="admin-section">
+                <h2>Configurações do Sistema</h2>
+                
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="supabase-url">URL do Supabase</label>
+                        <input type="url" id="supabase-url" placeholder="https://seu-projeto.supabase.co">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="supabase-key">Chave Anônima do Supabase</label>
+                        <input type="password" id="supabase-key" placeholder="sua-chave-anonima">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gemini-api-key">Chave da API Gemini</label>
+                        <input type="password" id="gemini-api-key" placeholder="sua-chave-gemini">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-email">Email do Administrador</label>
+                        <input type="email" id="admin-email" placeholder="admin@exemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="site-maintenance">Modo de Manutenção</label>
+                        <select id="site-maintenance">
+                            <option value="false">Desativado</option>
+                            <option value="true">Ativado</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn-view" onclick="adminPanel.saveConfig()">
+                            💾 Salvar Configurações
+                        </button>
+                        <button class="btn-small" onclick="adminPanel.testConfig()">
+                            🧪 Testar Configurações
+                        </button>
+                        <button class="btn-delete" onclick="adminPanel.resetConfig()">
+                            🔄 Resetar para Padrão
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal for viewing details -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Detalhes</h3>
+                <button class="close-modal" onclick="adminPanel.closeModal()">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+   
+    <script src="js/supabase-config.js"></script>
+    
+    <script>
+        // Admin Panel JavaScript
+        class AdminPanel {
+            constructor() {
+                this.currentSection = 'overview';
+                this.currentPage = 1;
+                this.itemsPerPage = 10;
+                this.feedbackData = [];
+                this.questionnaireData = [];
+                this.init();
+            }
+
+            async init() {
+                this.setupEventListeners();
+                await this.loadAllData();
+                this.updateOverview();
+            }
+
+            setupEventListeners() {
+                // Navigation buttons
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.switchSection(e.target.dataset.section);
+                    });
+                });
+
+                // Modal close on outside click
+                document.getElementById('detail-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'detail-modal') {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            switchSection(section) {
+                // Update navigation
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+                // Update sections
+                document.querySelectorAll('.admin-section').forEach(sec => {
+                    sec.classList.remove('active');
+                });
+                document.getElementById(`${section}-section`).classList.add('active');
+
+                this.currentSection = section;
+
+                // Load section-specific data
+                if (section === 'feedback') {
+                    this.loadFeedbackTable();
+                } else if (section === 'questionnaire') {
+                    this.loadQuestionnaireTable();
+                } else if (section === 'analytics') {
+                    this.loadAnalytics();
+                }
+            }
+
+            async loadAllData() {
+                try {
+                    // Load statistics from dbManager
+                    const [feedbackStats, questionnaireStats] = await Promise.all([
+                        dbManager.getFeedbackStats(),
+                        dbManager.getQuestionnaireStats()
+                    ]);
+
+                    if (feedbackStats.success) {
+                        this.feedbackStats = feedbackStats.data;
+                    }
+
+                    if (questionnaireStats.success) {
+                        this.questionnaireStats = questionnaireStats.data;
+                    }
+
+                    // Load raw data from Supabase/localStorage
+                    await this.loadRawFeedbackData();
+                    await this.loadRawQuestionnaireData();
+
+                } catch (error) {
+                    console.error('Error loading admin data:', error);
+                    this.showAlert('Erro ao carregar dados do sistema', 'error');
+                }
+            }
+
+            async loadRawFeedbackData() {
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        // Load from Supabase
+                        const { data, error } = await supabaseClient
+                            .from('feedback')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+                        
+                        if (error) {
+                            console.error('Error loading feedback from Supabase:', error);
+                            this.feedbackData = [];
+                        } else {
+                            this.feedbackData = data || [];
+                        }
+                    } else {
+                        // Load from localStorage
+                        const localData = localStorage.getItem('conexao_digital_feedback');
+                        this.feedbackData = localData ? JSON.parse(localData) : [];
+                    }
+                    
+                    console.log(`Loaded ${this.feedbackData.length} feedback records`);
+                } catch (error) {
+                    console.error('Error loading feedback data:', error);
+                    this.feedbackData = [];
+                }
+            }
+
+            async loadRawQuestionnaireData() {
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        // Load from Supabase
+                        const { data, error } = await supabaseClient
+                            .from('questionnaires')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+                        
+                        if (error) {
+                            console.error('Error loading questionnaires from Supabase:', error);
+                            this.questionnaireData = [];
+                        } else {
+                            this.questionnaireData = data || [];
+                        }
+                    } else {
+                        // Load from localStorage
+                        const localData = localStorage.getItem('conexao_digital_questionnaires');
+                        this.questionnaireData = localData ? JSON.parse(localData) : [];
+                    }
+                    
+                    console.log(`Loaded ${this.questionnaireData.length} questionnaire records`);
+                } catch (error) {
+                    console.error('Error loading questionnaire data:', error);
+                    this.questionnaireData = [];
+                }
+            }
+
+            updateOverview() {
+                document.getElementById('overview-feedbacks').textContent = this.feedbackStats?.totalFeedbacks || 0;
+                document.getElementById('overview-questionnaires').textContent = this.questionnaireStats?.totalResponses || 0;
+                document.getElementById('overview-rating').textContent = this.feedbackStats?.averageRating || '0.0';
+                
+                // Test database connection
+                this.testDatabaseConnection();
+            }
+
+            async testDatabaseConnection() {
+                const isConnected = await dbManager.testConnection();
+                const statusElement = document.getElementById('system-status');
+                
+                if (isConnected) {
+                    statusElement.innerHTML = '🟢 Online';
+                    statusElement.style.color = '#10b981';
+                } else {
+                    statusElement.innerHTML = '🟡 Local';
+                    statusElement.style.color = '#f59e0b';
+                }
+            }
+
+            loadFeedbackTable() {
+                const tbody = document.getElementById('feedback-tbody');
+                tbody.innerHTML = '';
+
+                if (this.feedbackData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Nenhum feedback encontrado</td></tr>';
+                    return;
+                }
+
+                this.feedbackData.forEach(feedback => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(feedback.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td>${feedback.name || 'Anônimo'}</td>
+                        <td>${feedback.email || 'Não informado'}</td>
+                        <td><span class="badge">${this.formatFeedbackType(feedback.type)}</span></td>
+                        <td>${feedback.rating ? '⭐'.repeat(feedback.rating) : 'N/A'}</td>
+                        <td>${feedback.message ? feedback.message.substring(0, 50) + (feedback.message.length > 50 ? '...' : '') : 'Sem mensagem'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="adminPanel.viewFeedback(${feedback.id})">Ver</button>
+                                <button class="btn-small btn-delete" onclick="adminPanel.deleteFeedback(${feedback.id})">Excluir</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            loadQuestionnaireTable() {
+                const tbody = document.getElementById('questionnaire-tbody');
+                tbody.innerHTML = '';
+
+                if (this.questionnaireData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Nenhuma resposta encontrada</td></tr>';
+                    return;
+                }
+
+                this.questionnaireData.forEach(response => {
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${new Date(response.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td>${response.name || 'Anônimo'}</td>
+                        <td>${this.formatDisabilityType(response.disability_type)}</td>
+                        <td>${this.formatCommonProblems(response.common_problems)}</td>
+                        <td>${response.site_rating ? '⭐'.repeat(response.site_rating) : 'Não avaliado'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-view" onclick="adminPanel.viewQuestionnaire(${response.id})">Ver</button>
+                                <button class="btn-small btn-delete" onclick="adminPanel.deleteQuestionnaire(${response.id})">Excluir</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            viewFeedback(id) {
+                const feedback = this.feedbackData.find(f => f.id === id);
+                if (!feedback) return;
+
+                document.getElementById('modal-title').textContent = 'Detalhes do Feedback';
+                document.getElementById('modal-body').innerHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                        <div><strong>ID:</strong> ${feedback.id}</div>
+                        <div><strong>Data:</strong> ${new Date(feedback.created_at).toLocaleString('pt-BR')}</div>
+                        <div><strong>Nome:</strong> ${feedback.name || 'Anônimo'}</div>
+                        <div><strong>Email:</strong> ${feedback.email || 'Não informado'}</div>
+                        <div><strong>Tipo:</strong> ${this.formatFeedbackType(feedback.type)}</div>
+                        <div><strong>Avaliação:</strong> ${feedback.rating ? '⭐'.repeat(feedback.rating) + ` (${feedback.rating}/5)` : 'Não avaliado'}</div>
+                        <div><strong>Página:</strong> ${feedback.page || 'Não especificada'}</div>
+                        <div><strong>Mensagem:</strong></div>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; border-left: 4px solid var(--primary-color);">
+                            ${feedback.message || 'Sem mensagem'}
+                        </div>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                            <button class="btn-delete" onclick="adminPanel.deleteFeedback(${feedback.id}); adminPanel.closeModal();">
+                                🗑️ Excluir Feedback
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('detail-modal').style.display = 'block';
+            }
+
+            viewQuestionnaire(id) {
+                const response = this.questionnaireData.find(r => r.id === id);
+                if (!response) return;
+
+                document.getElementById('modal-title').textContent = 'Detalhes do Questionário';
+                document.getElementById('modal-body').innerHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                        <div><strong>ID:</strong> ${response.id}</div>
+                        <div><strong>Data:</strong> ${new Date(response.created_at).toLocaleString('pt-BR')}</div>
+                        <div><strong>Nome:</strong> ${response.name || 'Anônimo'}</div>
+                        <div><strong>Tipo de Deficiência:</strong> ${this.formatDisabilityType(response.disability_type)}</div>
+                        <div><strong>Tecnologias Assistivas:</strong> ${this.formatTechnologies(response.assistive_technologies)}</div>
+                        <div><strong>Problemas Comuns:</strong> ${this.formatCommonProblems(response.common_problems)}</div>
+                        <div><strong>Avaliação do Site:</strong> ${response.site_rating ? '⭐'.repeat(response.site_rating) + ` (${response.site_rating}/5)` : 'Não avaliado'}</div>
+                        ${response.suggestions ? `<div><strong>Sugestões/Comentários:</strong> ${response.suggestions}</div>` : ''}
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                            <button class="btn-delete" onclick="adminPanel.deleteQuestionnaire(${response.id}); adminPanel.closeModal();">
+                                🗑️ Excluir Questionário
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('detail-modal').style.display = 'block';
+            }
+
+            closeModal() {
+                document.getElementById('detail-modal').style.display = 'none';
+            }
+
+            formatFeedbackType(type) {
+                const types = {
+                    'bug': 'Bug/Erro',
+                    'suggestion': 'Sugestão',
+                    'compliment': 'Elogio',
+                    'complaint': 'Reclamação',
+                    'accessibility': 'Acessibilidade',
+                    'sugestao': 'Sugestão',
+                    'problema': 'Problema',
+                    'elogio': 'Elogio',
+                    'outro': 'Outro'
+                };
+                return types[type] || type;
+            }
+
+            formatDisabilityType(type) {
+                if (!type) return 'Não especificado';
+                
+                const types = {
+                    'visual': 'Deficiência Visual',
+                    'auditiva': 'Deficiência Auditiva',
+                    'motora': 'Deficiência Motora',
+                    'cognitiva': 'Deficiência Cognitiva',
+                    'multipla': 'Deficiência Múltipla',
+                    'nenhuma': 'Nenhuma Deficiência',
+                    'hearing': 'Deficiência Auditiva',
+                    'mobility': 'Deficiência Motora',
+                    'cognitive': 'Deficiência Cognitiva',
+                    'multiple': 'Deficiência Múltipla',
+                    'none': 'Nenhuma Deficiência'
+                };
+                return types[type] || type;
+            }
+
+            formatCommonProblems(problems) {
+                if (!problems) return 'Não especificado';
+                
+                const problemTranslations = {
+                    'navigation': 'Navegação',
+                    'text_size': 'Tamanho do Texto',
+                    'color_contrast': 'Contraste de Cores',
+                    'audio_controls': 'Controles de Áudio',
+                    'keyboard_access': 'Acesso por Teclado',
+                    'loading_time': 'Tempo de Carregamento',
+                    'form_filling': 'Preenchimento de Formulários',
+                    'image_alt_text': 'Texto Alternativo de Imagens',
+                    'video_captions': 'Legendas de Vídeo',
+                    'complex_layout': 'Layout Complexo'
+                };
+                
+                if (Array.isArray(problems)) {
+                    if (problems.length === 0) return 'Nenhum problema relatado';
+                    return problems.map(problem => problemTranslations[problem] || problem).join(', ');
+                }
+                
+                return problemTranslations[problems] || problems;
+            }
+
+            formatTechnologies(technologies) {
+                if (!technologies) return 'Não especificado';
+                
+                const techTranslations = {
+                    'screen_reader': 'Leitor de Tela',
+                    'magnifier': 'Lupa/Ampliador',
+                    'voice_recognition': 'Reconhecimento de Voz',
+                    'keyboard_navigation': 'Navegação por Teclado',
+                    'high_contrast': 'Alto Contraste',
+                    'large_fonts': 'Fontes Grandes',
+                    'alternative_keyboard': 'Teclado Alternativo',
+                    'eye_tracker': 'Rastreamento Ocular',
+                    'switch_control': 'Controle por Acionadores',
+                    'braille_display': 'Display Braille'
+                };
+                
+                if (Array.isArray(technologies)) {
+                    if (technologies.length === 0) return 'Nenhuma tecnologia assistiva';
+                    return technologies.map(tech => techTranslations[tech] || tech).join(', ');
+                }
+                
+                return techTranslations[technologies] || technologies;
+            }
+
+            formatBarriersFrequency(frequency) {
+                if (!frequency) return 'Não especificado';
+                
+                const frequencies = {
+                    'sempre': 'Sempre',
+                    'frequentemente': 'Frequentemente',
+                    'as-vezes': 'Às vezes',
+                    'raramente': 'Raramente',
+                    'nunca': 'Nunca'
+                };
+                return frequencies[frequency] || frequency;
+            }
+
+            async deleteFeedback(id) {
+                if (!confirm('Tem certeza que deseja excluir este feedback?')) {
+                    return;
+                }
+
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        // Delete from Supabase
+                        const { error } = await supabaseClient
+                            .from('feedback')
+                            .delete()
+                            .eq('id', id);
+
+                        if (error) {
+                            throw error;
+                        }
+                    } else {
+                        // Delete from localStorage
+                        const localData = JSON.parse(localStorage.getItem('conexao_digital_feedback') || '[]');
+                        const filteredData = localData.filter(item => item.id !== id);
+                        localStorage.setItem('conexao_digital_feedback', JSON.stringify(filteredData));
+                    }
+
+                    // Remove from local array and refresh table
+                    this.feedbackData = this.feedbackData.filter(item => item.id !== id);
+                    this.loadFeedbackTable();
+                    this.updateOverview();
+                    
+                    this.showAlert('Feedback excluído com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Error deleting feedback:', error);
+                    this.showAlert('Erro ao excluir feedback', 'error');
+                }
+            }
+
+            async deleteQuestionnaire(id) {
+                if (!confirm('Tem certeza que deseja excluir este questionário?')) {
+                    return;
+                }
+
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        // Delete from Supabase
+                        const { error } = await supabaseClient
+                            .from('questionnaires')
+                            .delete()
+                            .eq('id', id);
+
+                        if (error) {
+                            throw error;
+                        }
+                    } else {
+                        // Delete from localStorage
+                        const localData = JSON.parse(localStorage.getItem('conexao_digital_questionnaires') || '[]');
+                        const filteredData = localData.filter(item => item.id !== id);
+                        localStorage.setItem('conexao_digital_questionnaires', JSON.stringify(filteredData));
+                    }
+
+                    // Remove from local array and refresh table
+                    this.questionnaireData = this.questionnaireData.filter(item => item.id !== id);
+                    this.loadQuestionnaireTable();
+                    this.updateOverview();
+                    
+                    this.showAlert('Questionário excluído com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Error deleting questionnaire:', error);
+                    this.showAlert('Erro ao excluir questionário', 'error');
+                }
+            }
+
+            async exportAllData() {
+                try {
+                    const data = {
+                        feedbacks: this.feedbackData,
+                        questionnaires: this.questionnaireData,
+                        stats: {
+                            feedback: this.feedbackStats,
+                            questionnaire: this.questionnaireStats
+                        },
+                        exported_at: new Date().toISOString(),
+                        data_source: dbManager.isSupabaseAvailable ? 'supabase' : 'localStorage'
+                    };
+
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `conexao-digital-dados-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+
+                    this.showAlert('Dados exportados com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Error exporting data:', error);
+                    this.showAlert('Erro ao exportar dados', 'error');
+                }
+            }
+
+            exportFeedbacks() {
+                try {
+                    if (this.feedbackData.length === 0) {
+                        this.showAlert('Nenhum feedback para exportar', 'warning');
+                        return;
+                    }
+
+                    // Create CSV content
+                    const headers = ['ID', 'Data', 'Nome', 'Email', 'Tipo', 'Avaliação', 'Mensagem', 'Página'];
+                    const csvContent = [
+                        headers.join(','),
+                        ...this.feedbackData.map(feedback => [
+                            feedback.id,
+                            new Date(feedback.created_at).toLocaleDateString('pt-BR'),
+                            `"${feedback.name || 'Anônimo'}"`,
+                            `"${feedback.email || 'Não informado'}"`,
+                            `"${this.formatFeedbackType(feedback.type)}"`,
+                            feedback.rating || 'N/A',
+                            `"${(feedback.message || 'Sem mensagem').replace(/"/g, '""')}"`,
+                            `"${feedback.page || 'Não especificada'}"`
+                        ].join(','))
+                    ].join('\n');
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `feedbacks-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+
+                    this.showAlert('Feedbacks exportados em CSV!', 'success');
+                } catch (error) {
+                    console.error('Error exporting feedbacks:', error);
+                    this.showAlert('Erro ao exportar feedbacks', 'error');
+                }
+            }
+
+            exportQuestionnaires() {
+                try {
+                    if (this.questionnaireData.length === 0) {
+                        this.showAlert('Nenhum questionário para exportar', 'warning');
+                        return;
+                    }
+
+                    // Create CSV content
+                    const headers = ['ID', 'Data', 'Nome', 'Tipo de Deficiência', 'Tecnologias Assistivas', 'Problemas Comuns', 'Avaliação do Site', 'Sugestões'];
+                    const csvContent = [
+                        headers.join(','),
+                        ...this.questionnaireData.map(response => [
+                            response.id,
+                            new Date(response.created_at).toLocaleDateString('pt-BR'),
+                            `"${response.name || 'Anônimo'}"`,
+                            `"${this.formatDisabilityType(response.disability_type)}"`,
+                            `"${this.formatTechnologies(response.assistive_technologies)}"`,
+                            `"${this.formatCommonProblems(response.common_problems)}"`,
+                            response.site_rating || 'N/A',
+                            `"${(response.suggestions || 'Não informado').replace(/"/g, '""')}"`
+                        ].join(','))
+                    ].join('\n');
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `questionarios-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+
+                    this.showAlert('Questionários exportados em CSV!', 'success');
+                } catch (error) {
+                    console.error('Error exporting questionnaires:', error);
+                    this.showAlert('Erro ao exportar questionários', 'error');
+                }
+            }
+
+            applyFeedbackFilters() {
+                let filteredData = [...this.feedbackData];
+
+                // Filter by type
+                const typeFilter = document.getElementById('feedback-type-filter').value;
+                if (typeFilter) {
+                    filteredData = filteredData.filter(feedback => feedback.type === typeFilter);
+                }
+
+                // Filter by rating
+                const ratingFilter = document.getElementById('feedback-rating-filter').value;
+                if (ratingFilter) {
+                    filteredData = filteredData.filter(feedback => feedback.rating === parseInt(ratingFilter));
+                }
+
+                // Filter by date
+                const dateFilter = document.getElementById('feedback-date-filter').value;
+                if (dateFilter) {
+                    const filterDate = new Date(dateFilter);
+                    filteredData = filteredData.filter(feedback => {
+                        const feedbackDate = new Date(feedback.created_at);
+                        return feedbackDate.toDateString() === filterDate.toDateString();
+                    });
+                }
+
+                // Update table with filtered data
+                const originalData = this.feedbackData;
+                this.feedbackData = filteredData;
+                this.loadFeedbackTable();
+                this.feedbackData = originalData; // Restore original data
+
+                this.showAlert(`${filteredData.length} feedback(s) encontrado(s)`, 'info');
+            }
+
+            applyQuestionnaireFilters() {
+                let filteredData = [...this.questionnaireData];
+
+                // Filter by disability type
+                const disabilityFilter = document.getElementById('disability-filter').value;
+                if (disabilityFilter) {
+                    filteredData = filteredData.filter(response => response.disability_type === disabilityFilter);
+                }
+
+                // Note: barriers-filter is not available in the current data structure
+                // Keeping for backwards compatibility but it won't filter anything
+
+                // Update table with filtered data
+                const originalData = this.questionnaireData;
+                this.questionnaireData = filteredData;
+                this.loadQuestionnaireTable();
+                this.questionnaireData = originalData; // Restore original data
+
+                this.showAlert(`${filteredData.length} questionário(s) encontrado(s)`, 'info');
+            }
+
+            async refreshAllData() {
+                this.showAlert('Atualizando dados...', 'warning');
+                await this.loadAllData();
+                this.updateOverview();
+                
+                if (this.currentSection === 'feedback') {
+                    this.loadFeedbackTable();
+                } else if (this.currentSection === 'questionnaire') {
+                    this.loadQuestionnaireTable();
+                }
+                
+                this.showAlert('Dados atualizados com sucesso!', 'success');
+            }
+
+            showAlert(message, type = 'info') {
+                const alertContainer = document.getElementById('alert-container');
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                
+                alertContainer.appendChild(alert);
+                
+                setTimeout(() => {
+                    alert.remove();
+                }, 5000);
+            }
+
+            saveConfig() {
+                const config = {
+                    supabaseUrl: document.getElementById('supabase-url').value,
+                    supabaseKey: document.getElementById('supabase-key').value,
+                    geminiApiKey: document.getElementById('gemini-api-key').value,
+                    adminEmail: document.getElementById('admin-email').value,
+                    siteMaintenance: document.getElementById('site-maintenance').value === 'true'
+                };
+
+                localStorage.setItem('admin_config', JSON.stringify(config));
+                this.showAlert('Configurações salvas com sucesso!', 'success');
+            }
+
+            loadConfig() {
+                const config = JSON.parse(localStorage.getItem('admin_config') || '{}');
+                
+                if (config.supabaseUrl) document.getElementById('supabase-url').value = config.supabaseUrl;
+                if (config.supabaseKey) document.getElementById('supabase-key').value = config.supabaseKey;
+                if (config.geminiApiKey) document.getElementById('gemini-api-key').value = config.geminiApiKey;
+                if (config.adminEmail) document.getElementById('admin-email').value = config.adminEmail;
+                if (config.siteMaintenance !== undefined) {
+                    document.getElementById('site-maintenance').value = config.siteMaintenance.toString();
+                }
+            }
+        }
+
+        // Authentication System
+        class AdminAuth {
+            constructor() {
+                this.isAuthenticated = false;
+                this.credentials = {
+                    username: 'muzi',
+                    password: '92521902sM*'
+                };
+                this.init();
+            }
+
+            init() {
+                // Check if already authenticated
+                const authToken = sessionStorage.getItem('admin_auth');
+                if (authToken === 'authenticated') {
+                    this.showMainContent();
+                } else {
+                    this.showLoginModal();
+                }
+
+                // Setup login form
+                this.setupLoginForm();
+            }
+
+            setupLoginForm() {
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleLogin();
+                    });
+                }
+            }
+
+            handleLogin() {
+                const username = document.getElementById('admin-username').value;
+                const password = document.getElementById('admin-password').value;
+                const errorDiv = document.getElementById('login-error');
+
+                // Clear previous errors
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+
+                // Validate credentials
+                if (username === this.credentials.username && password === this.credentials.password) {
+                    // Successful login
+                    sessionStorage.setItem('admin_auth', 'authenticated');
+                    this.showMainContent();
+                } else {
+                    // Failed login
+                    this.showError('Usuário ou senha incorretos. Tente novamente.');
+                }
+            }
+
+            showError(message) {
+                let errorDiv = document.getElementById('login-error');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.id = 'login-error';
+                    errorDiv.className = 'login-error';
+                    const loginForm = document.getElementById('login-form');
+                    loginForm.insertBefore(errorDiv, loginForm.firstChild);
+                }
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+
+            showLoginModal() {
+                const loginModal = document.getElementById('login-modal');
+                const mainContent = document.getElementById('main-content');
+                const accessibilityToolbar = document.getElementById('accessibility-toolbar');
+
+                if (loginModal) {
+                    loginModal.classList.remove('hide');
+                }
+                if (mainContent) mainContent.style.display = 'none';
+                if (accessibilityToolbar) accessibilityToolbar.style.display = 'none';
+            }
+
+            showMainContent() {
+                const loginModal = document.getElementById('login-modal');
+                const mainContent = document.getElementById('main-content');
+                const accessibilityToolbar = document.getElementById('accessibility-toolbar');
+
+                if (loginModal) {
+                    loginModal.classList.add('hide');
+                }
+                if (mainContent) mainContent.style.display = 'block';
+                if (accessibilityToolbar) accessibilityToolbar.style.display = 'block';
+
+                this.isAuthenticated = true;
+            }
+
+            logout() {
+                sessionStorage.removeItem('admin_auth');
+                this.isAuthenticated = false;
+                this.showLoginModal();
+                
+                // Clear form fields
+                const usernameField = document.getElementById('admin-username');
+                const passwordField = document.getElementById('admin-password');
+                if (usernameField) usernameField.value = '';
+                if (passwordField) passwordField.value = '';
+            }
+        }
+
+        // Initialize authentication and admin panel
+        let adminPanel;
+        let adminAuth;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            adminAuth = new AdminAuth();
+            
+            setTimeout(() => {
+                adminPanel = new AdminPanel();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

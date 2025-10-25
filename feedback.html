@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Compartilhe sua experiência e ajude-nos a melhorar a acessibilidade digital. Seu feedback é fundamental.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles/main.css" as="style">
+    <link rel="preload" href="styles/accessibility.css" as="style">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Feedback - Conexão Digital Inclusiva">
+    <meta property="og:description" content="Compartilhe sua experiência com acessibilidade digital.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://conexaodigitalinclusiva.com/feedback">
+    
+    <style>
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .feedback-card {
+            background:#111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            display: block;
+            text-align: center;
+        }
+        
+        .form-section {
+            background: var(--background-gray);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .form-checkbox,
+        .form-radio {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .form-checkbox input,
+        .form-radio input {
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+        
+        .form-checkbox label,
+        .form-radio label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .rating-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .rating-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .rating-option:hover,
+        .rating-option:focus-within {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .rating-option input {
+            margin: 0;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            border: 1px solid #c3e6cb;
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .questionnaire-section {
+            background: #111827;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+            border: 1px solid var(--border-color);
+        }
+        
+        .question-group {
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .question-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .question-description {
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.95rem;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-sm);
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            transition: background-color var(--transition-fast);
+        }
+        
+        .option-item:hover {
+            background: var(--background-gray);
+        }
+        
+        .statistics-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .testimonials-section {
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .testimonial-quote {
+            font-style: italic;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .testimonial-role {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .quote-icon {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            font-size: 2rem;
+            color: var(--primary-color);
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .feedback-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .rating-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .rating-option {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+        
+                
+                <nav class="nav" role="navigation" aria-label="Navegação Principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu de navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <ul id="nav-menu" class="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem">Início</a></li>
+                    <li role="none"><a href="sobre.html" role="menuitem">Sobre</a></li>
+                    <li role="none"><a href="importancia.html" role="menuitem">Importância</a></li>
+                    <li role="none"><a href="tecnologias.html" role="menuitem">Tecnologias</a></li>
+                    <li role="none"><a href="ods10.html" role="menuitem">ODS.10</a></li>
+                    <li role="none"><a href="comunidade.html" role="menuitem">Comunidade</a></li>
+                    <li role="none"><a href="feedback.html" role="menuitem">Feedback</a></li>
+                    <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="admin.html" role="menuitem">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero hero-secondary" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="hero-title" class="hero-title">Seu Feedback é Importante</h1>
+                    <p class="hero-subtitle">Ajude-nos a construir um mundo digital mais acessível compartilhando sua experiência</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Types -->
+        <section class="section" aria-labelledby="types-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="types-title" class="section-title">Como Você Pode Contribuir</h2>
+                    <p class="section-subtitle">Escolha a forma que melhor se adequa à sua experiência</p>
+                </div>
+                
+                <div class="feedback-grid">
+                    <div class="feedback-card">
+                        <span class="card-icon" aria-hidden="true">💬</span>
+                        <h3>Feedback Geral</h3>
+                        <p>Compartilhe sua experiência navegando em nosso site, sugestões de melhoria ou problemas encontrados.</p>
+                        <a href="#feedback-form" class="btn btn-primary">Enviar Feedback</a>
+                    </div>
+                    
+                    <div class="feedback-card">
+                        <span class="card-icon" aria-hidden="true">📊</span>
+                        <h3>Questionário de Acessibilidade</h3>
+                        <p>Participe de nossa pesquisa sobre acessibilidade digital e ajude-nos a entender melhor as necessidades dos usuários.</p>
+                        <a href="#questionnaire" class="btn btn-primary">Responder Questionário</a>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="statistics-section" aria-labelledby="stats-title">
+            <div class="container">
+                <h2 id="stats-title" class="section-title text-white">Impacto da Comunidade</h2>
+                <p class="text-white">Veja como sua participação faz a diferença (Informações simuladas)</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">1,247</span>
+                        <span>Feedbacks Recebidos</span>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">89%</span>
+                        <span>Melhorias Implementadas</span>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">156</span>
+                        <span>Problemas Corrigidos</span>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">4.8/5</span>
+                        <span>Avaliação Média</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Form -->
+        <section id="feedback-form" class="form-section" aria-labelledby="feedback-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="feedback-title" class="section-title">Formulário de Feedback</h2>
+                    <p class="section-subtitle">Compartilhe sua experiência conosco</p>
+                </div>
+                
+                <div id="feedback-success" class="success-message" role="alert" aria-live="polite">
+                    <strong>Obrigado!</strong> Seu feedback foi enviado com sucesso. Agradecemos sua contribuição!
+                </div>
+                
+                <form id="feedback-form-element" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="feedback-name" class="form-label">Nome (opcional)</label>
+                            <input type="text" id="feedback-name" name="name" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feedback-email" class="form-label">E-mail (opcional)</label>
+                            <input type="email" id="feedback-email" name="email" class="form-input" aria-describedby="email-help">
+                            <small id="email-help" class="form-help">Apenas se desejar receber uma resposta</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback-type" class="form-label">Tipo de Feedback *</label>
+                        <select id="feedback-type" name="type" class="form-select" required aria-describedby="type-error">
+                            <option value="">Selecione o tipo</option>
+                            <option value="suggestion">Sugestão de Melhoria</option>
+                            <option value="problem">Problema Encontrado</option>
+                            <option value="compliment">Elogio</option>
+                            <option value="accessibility">Questão de Acessibilidade</option>
+                            <option value="content">Conteúdo</option>
+                            <option value="other">Outro</option>
+                        </select>
+                        <div id="type-error" class="error-message" role="alert" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback-rating" class="form-label">Como você avalia nossa plataforma? *</label>
+                        <div class="rating-group" role="radiogroup" aria-labelledby="feedback-rating" aria-describedby="rating-error">
+                            <div class="rating-option">
+                                <input type="radio" id="rating-1" name="rating" value="1" required>
+                                <label for="rating-1">1 - Muito Ruim</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating-2" name="rating" value="2" required>
+                                <label for="rating-2">2 - Ruim</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating-3" name="rating" value="3" required>
+                                <label for="rating-3">3 - Regular</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating-4" name="rating" value="4" required>
+                                <label for="rating-4">4 - Bom</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating-5" name="rating" value="5" required>
+                                <label for="rating-5">5 - Excelente</label>
+                            </div>
+                        </div>
+                        <div id="rating-error" class="error-message" role="alert" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback-message" class="form-label">Sua Mensagem *</label>
+                        <textarea id="feedback-message" name="message" class="form-textarea" required 
+                                  placeholder="Descreva sua experiência, sugestão ou problema encontrado..." 
+                                  aria-describedby="message-error message-help"></textarea>
+                        <small id="message-help" class="form-help">Seja específico para nos ajudar a entender melhor</small>
+                        <div id="message-error" class="error-message" role="alert" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feedback-page" class="form-label">Página Relacionada (opcional)</label>
+                        <input type="text" id="feedback-page" name="page" class="form-input" 
+                               placeholder="Ex: Página Inicial, Sobre, Tecnologias...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="feedback-contact" name="contact" value="yes">
+                            <label for="feedback-contact">Autorizo o contato para esclarecimentos sobre este feedback</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-large">Enviar Feedback</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Accessibility Questionnaire -->
+        <section id="questionnaire" class="questionnaire-section" aria-labelledby="questionnaire-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="questionnaire-title" class="section-title">Questionário de Acessibilidade</h2>
+                    <p class="section-subtitle">Ajude-nos a entender melhor as necessidades de acessibilidade digital</p>
+                </div>
+                
+                <div id="questionnaire-success" class="success-message" role="alert" aria-live="polite">
+                    <strong>Obrigado!</strong> Suas respostas foram registradas com sucesso. Sua participação é muito valiosa!
+                </div>
+                
+                <form id="questionnaire-form" novalidate>
+                    <div class="question-group">
+                        <h3 class="question-title">1. Você possui alguma deficiência ou condição que afeta sua navegação na internet?</h3>
+                        <p class="question-description">Esta informação nos ajuda a entender melhor nosso público</p>
+                        <div class="options-grid">
+                            <div class="option-item">
+                                <input type="radio" id="disability-visual" name="disability" value="visual">
+                                <label for="disability-visual">Deficiência Visual</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-hearing" name="disability" value="hearing">
+                                <label for="disability-hearing">Deficiência Auditiva</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-motor" name="disability" value="motor">
+                                <label for="disability-motor">Deficiência Motora</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-cognitive" name="disability" value="cognitive">
+                                <label for="disability-cognitive">Deficiência Cognitiva</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-multiple" name="disability" value="multiple">
+                                <label for="disability-multiple">Múltiplas Deficiências</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-none" name="disability" value="none">
+                                <label for="disability-none">Não possuo</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="disability-prefer-not" name="disability" value="prefer-not">
+                                <label for="disability-prefer-not">Prefiro não informar</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group">
+                        <h3 class="question-title">2. Quais tecnologias assistivas você utiliza?</h3>
+                        <p class="question-description">Marque todas que se aplicam</p>
+                        <div class="options-grid">
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-screen-reader" name="assistive_tech" value="screen_reader">
+                                <label for="tech-screen-reader">Leitor de Tela</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-magnifier" name="assistive_tech" value="magnifier">
+                                <label for="tech-magnifier">Ampliador de Tela</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-keyboard" name="assistive_tech" value="keyboard">
+                                <label for="tech-keyboard">Navegação por Teclado</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-voice" name="assistive_tech" value="voice">
+                                <label for="tech-voice">Comandos de Voz</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-switch" name="assistive_tech" value="switch">
+                                <label for="tech-switch">Dispositivos de Comutação</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-eye-tracking" name="assistive_tech" value="eye_tracking">
+                                <label for="tech-eye-tracking">Rastreamento Ocular</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="tech-none" name="assistive_tech" value="none">
+                                <label for="tech-none">Não utilizo</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group">
+                        <h3 class="question-title">3. Com que frequência você encontra barreiras de acessibilidade na internet?</h3>
+                        <div class="options-grid">
+                            <div class="option-item">
+                                <input type="radio" id="barriers-daily" name="barriers_frequency" value="daily">
+                                <label for="barriers-daily">Diariamente</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="barriers-weekly" name="barriers_frequency" value="weekly">
+                                <label for="barriers-weekly">Semanalmente</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="barriers-monthly" name="barriers_frequency" value="monthly">
+                                <label for="barriers-monthly">Mensalmente</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="barriers-rarely" name="barriers_frequency" value="rarely">
+                                <label for="barriers-rarely">Raramente</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" id="barriers-never" name="barriers_frequency" value="never">
+                                <label for="barriers-never">Nunca</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group">
+                        <h3 class="question-title">4. Quais são os principais problemas de acessibilidade que você encontra?</h3>
+                        <p class="question-description">Marque todas que se aplicam</p>
+                        <div class="options-grid">
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-navigation" name="common_problems" value="navigation">
+                                <label for="problem-navigation">Dificuldade de navegação</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-text" name="common_problems" value="text">
+                                <label for="problem-text">Texto difícil de ler</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-images" name="common_problems" value="images">
+                                <label for="problem-images">Imagens sem descrição</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-videos" name="common_problems" value="videos">
+                                <label for="problem-videos">Vídeos sem legendas</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-forms" name="common_problems" value="forms">
+                                <label for="problem-forms">Formulários complexos</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-colors" name="common_problems" value="colors">
+                                <label for="problem-colors">Contraste de cores</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="problem-mobile" name="common_problems" value="mobile">
+                                <label for="problem-mobile">Problemas no mobile</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group">
+                        <h3 class="question-title">5. Como você avalia a acessibilidade do nosso site?</h3>
+                        <div class="rating-group" role="radiogroup" aria-labelledby="site-rating">
+                            <div class="rating-option">
+                                <input type="radio" id="site-rating-1" name="site_rating" value="1">
+                                <label for="site-rating-1">1 - Muito Ruim</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="site-rating-2" name="site_rating" value="2">
+                                <label for="site-rating-2">2 - Ruim</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="site-rating-3" name="site_rating" value="3">
+                                <label for="site-rating-3">3 - Regular</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="site-rating-4" name="site_rating" value="4">
+                                <label for="site-rating-4">4 - Bom</label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="site-rating-5" name="site_rating" value="5">
+                                <label for="site-rating-5">5 - Excelente</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group">
+                        <h3 class="question-title">6. Comentários adicionais</h3>
+                        <p class="question-description">Compartilhe sugestões, experiências ou qualquer outro comentário</p>
+                        <textarea name="additional_comments" class="form-textarea" 
+                                  placeholder="Seus comentários são muito importantes para nós..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-large">Enviar Questionário</button>
+                </form>
+            </div>
+        </section>
+
+        
+
+    </main>
+
+   <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Button -->
+    <button id="ai-chatbot-btn" class="ai-chatbot-btn" aria-label="Abrir assistente de IA">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+    </button>
+
+    <!-- AI Chatbot Modal -->
+    <div id="ai-chatbot-modal" class="chatbot-modal" role="dialog" aria-labelledby="chatbot-title" aria-hidden="true">
+        <div class="chatbot-content">
+            <div class="chatbot-header">
+                <h3 id="chatbot-title">Assistente de Acessibilidade</h3>
+                <button id="close-chatbot" class="close-btn" aria-label="Fechar assistente">&times;</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages" role="log" aria-live="polite"></div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Digite sua pergunta sobre acessibilidade..." aria-label="Campo de mensagem para o assistente">
+                <button id="send-message" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/supabase-config.js"></script>
+    
+    <script>
+        // Form validation and submission
+        function validateForm(form) {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            // Clear previous errors
+            form.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            
+            requiredFields.forEach(field => {
+                const errorId = field.getAttribute('aria-describedby');
+                const errorEl = errorId ? document.getElementById(errorId) : null;
+                
+                if (field.type === 'radio') {
+                    const radioGroup = form.querySelectorAll(`[name="${field.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                    
+                    if (!isChecked && errorEl) {
+                        errorEl.textContent = 'Por favor, selecione uma opção.';
+                        errorEl.classList.add('show');
+                        isValid = false;
+                    }
+                } else if (!field.value.trim()) {
+                    if (errorEl) {
+                        errorEl.textContent = 'Este campo é obrigatório.';
+                        errorEl.classList.add('show');
+                    }
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        async function submitForm(form, successElementId, dataType) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Collect form data
+                const formData = new FormData(form);
+                const data = {};
+                
+                // Handle multiple checkboxes
+                const checkboxGroups = ['assistive_tech', 'common_problems'];
+                checkboxGroups.forEach(group => {
+                    data[group] = formData.getAll(group);
+                });
+                
+                // Handle other fields
+                for (let [key, value] of formData.entries()) {
+                    if (!checkboxGroups.includes(key)) {
+                        data[key] = value;
+                    }
+                }
+                
+                // Add metadata
+                data.page = window.location.pathname;
+                data.timestamp = new Date().toISOString();
+                
+                // Save to database
+                let result;
+                if (dataType === 'feedback') {
+                    result = await dbManager.saveFeedback(data);
+                } else if (dataType === 'questionnaire') {
+                    result = await dbManager.saveQuestionnaire(data);
+                }
+                
+                if (result && result.success) {
+                    const successEl = document.getElementById(successElementId);
+                    successEl.classList.add('show');
+                    successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    form.reset();
+                    submitBtn.textContent = 'Enviado!';
+                    submitBtn.style.background = '#10b981';
+                    
+                    // Focus on success message for screen readers
+                    successEl.focus();
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                    }, 2000);
+                } else {
+                    throw new Error('Falha ao salvar dados');
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                submitBtn.textContent = 'Erro - Tente novamente';
+                submitBtn.style.background = '#dc2626';
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                }, 3000);
+            }
+        }
+        
+        // Feedback form
+        document.getElementById('feedback-form-element').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm(this)) {
+                submitForm(this, 'feedback-success', 'feedback');
+            } else {
+                // Focus on first error
+                const firstError = this.querySelector('.error-message.show');
+                if (firstError) {
+                    const fieldId = firstError.id.replace('-error', '');
+                    const field = document.getElementById(fieldId);
+                    if (field) field.focus();
+                }
+            }
+        });
+        
+        // Questionnaire form
+        document.getElementById('questionnaire-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            submitForm(this, 'questionnaire-success', 'questionnaire');
+        });
+        
+        // Rating interaction enhancement
+        document.querySelectorAll('.rating-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Focus management for accessibility
+                    if (target.hasAttribute('tabindex') || target.tagName.match(/^H[1-6]$/)) {
+                        target.focus();
+                    }
+                }
+            });
+        });
+        
+        // Form accessibility enhancements
+        document.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('invalid', function(e) {
+                e.preventDefault();
+                
+                const errorId = this.getAttribute('aria-describedby');
+                const errorEl = errorId ? document.getElementById(errorId) : null;
+                
+                if (errorEl) {
+                    let message = 'Este campo é obrigatório.';
+                    
+                    if (this.type === 'email' && this.value) {
+                        message = 'Por favor, insira um e-mail válido.';
+                    }
+                    
+                    errorEl.textContent = message;
+                    errorEl.classList.add('show');
+                }
+            });
+            
+            field.addEventListener('input', function() {
+                const errorId = this.getAttribute('aria-describedby');
+                const errorEl = errorId ? document.getElementById(errorId) : null;
+                
+                if (errorEl && errorEl.classList.contains('show')) {
+                    errorEl.classList.remove('show');
+                    errorEl.textContent = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

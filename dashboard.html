@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Conexão Digital Inclusiva</title>
+    <meta name="description" content="Dashboard com estatísticas e dados sobre acessibilidade digital coletados pela plataforma Conexão Digital Inclusiva.">
+    <link rel="website icon" type="png"
+    href="image/logo.png">
+    
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/accessibility.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Supabase CDN (for production) -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: #111827;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card h3 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-container {
+            background: #111827;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .chart {
+            height: 300px;
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            border-bottom: 2px solid var(--border-color);
+            border-left: 2px solid var(--border-color);
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        .bar {
+            background: linear-gradient(to top, var(--primary-color), var(--secondary-color));
+            border-radius: 4px 4px 0 0;
+            min-width: 40px;
+            margin: 0 5px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--text-color);
+            text-align: center;
+            width: 80px;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            position: relative;
+            background: conic-gradient(
+                var(--primary-color) 0deg 120deg,
+                var(--secondary-color) 120deg 240deg,
+                var(--accent-color) 240deg 300deg,
+                #e0e0e0 300deg 360deg
+            );
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+
+        .data-source {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .refresh-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .refresh-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .refresh-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                padding: 1rem;
+            }
+
+            .chart {
+                height: 250px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .stat-card, .chart-container {
+                border: 2px solid var(--text-color);
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .stat-card, .bar {
+                transition: none;
+            }
+        }
+
+        /* Novos estilos para gráficos avançados */
+        .data-details {
+            margin-top: 3rem;
+        }
+
+        .data-details h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .data-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--bg-light);
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .advanced-stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Canvas específico para gráficos */
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Loading states para novos gráficos */
+        .chart-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: var(--text-light);
+        }
+
+        .chart-error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #dc3545;
+            text-align: center;
+        }
+
+        /* Tooltip para gráficos interativos */
+        .chart-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Responsividade para novos gráficos */
+        @media (max-width: 768px) {
+            .data-table-container {
+                font-size: 0.9rem;
+            }
+            
+            .advanced-stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+   
+
+    <!-- Accessibility Floating Button -->
+    <button id="accessibility-float-btn" class="accessibility-float-btn" aria-label="Abrir ferramentas de acessibilidade">
+        <i class="fas fa-universal-access" aria-hidden="true"></i>
+    </button>
+
+    <!-- Accessibility Toolbar -->
+    <div id="accessibility-toolbar" class="accessibility-toolbar" role="toolbar" aria-label="Ferramentas de Acessibilidade">
+        <button id="high-contrast-btn" class="accessibility-btn" aria-label="Alternar alto contraste">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+            <span>Alto Contraste</span>
+        </button>
+        <button id="font-size-btn" class="accessibility-btn" aria-label="Aumentar tamanho da fonte">
+            <i class="fas fa-text-height" aria-hidden="true"></i>
+            <span>Aumentar Fonte</span>
+        </button>
+        <button id="voice-reader-btn" class="accessibility-btn" aria-label="Ativar leitor de tela">
+            <i class="fas fa-volume-up" aria-hidden="true"></i>
+            <span>Leitor de Tela</span>
+        </button>
+        <button id="voice-commands-btn" class="accessibility-btn" aria-label="Ativar comandos de voz">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+            <span>Comandos de Voz</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><a href="index.html" aria-label="Conexão Digital Inclusiva - Página inicial">Conexão Digital Inclusiva</a></h1>
+                </div>
+                
+                <nav class="nav" role="navigation" aria-label="Navegação principal">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                        <span class="sr-only">Menu</span>
+                        <span class="hamburger"></span>
+                    </button>
+                    
+                    <ul class="nav-menu" id="nav-menu">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="sobre.html">Sobre</a></li>
+                        <li><a href="importancia.html">Importância</a></li>
+                        <li><a href="tecnologias.html">Tecnologias</a></li>
+                        <li><a href="ods10.html">ODS.10</a></li>
+                        <li><a href="comunidade.html">Comunidade</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                        <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+                        <li><a href="admin.html">Painel Administrativo</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main" role="main">
+        <div class="dashboard-container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>Dashboard de Acessibilidade Digital</h1>
+                <p>Estatísticas e dados coletados sobre acessibilidade digital e inclusão</p>
+                <button id="refresh-data" class="refresh-button" aria-describedby="refresh-description">
+                    Atualizar Dados
+                </button>
+                <div id="refresh-description" class="sr-only">
+                    Clique para atualizar os dados do dashboard
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading" aria-live="polite">
+                <p>Carregando dados...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error" style="display: none;" role="alert" aria-live="assertive">
+                <p>Erro ao carregar dados. Tentando novamente...</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <section id="stats-section" class="dashboard-stats" style="display: none;" aria-labelledby="stats-heading">
+                <h2 id="stats-heading" class="sr-only">Estatísticas Gerais</h2>
+                
+                <div class="stat-card" role="img" aria-labelledby="total-feedback-label">
+                    <h3 id="total-feedback-label">Total de Feedbacks</h3>
+                    <div class="stat-value" id="total-feedbacks">0</div>
+                    <p class="stat-description">Feedbacks recebidos da comunidade</p>
+                </div>
+
+                <div class="stat-card" role="img" aria-labelledby="avg-rating-label">
+                    <h3 id="avg-rating-label">Avaliação Média</h3>
+                    <div class="stat-value" id="avg-rating">0.0</div>
+                    <p class="stat-description">Nota média do site (1-5 estrelas)</p>
+                </div>
+
+                <div class="stat-card" role="img" aria-labelledby="total-responses-label">
+                    <h3 id="total-responses-label">Respostas do Questionário</h3>
+                    <div class="stat-value" id="total-responses">0</div>
+                    <p class="stat-description">Questionários de acessibilidade respondidos</p>
+                </div>
+
+                <div class="stat-card" role="img" aria-labelledby="engagement-label">
+                    <h3 id="engagement-label">Taxa de Engajamento</h3>
+                    <div class="stat-value" id="engagement-rate">0%</div>
+                    <p class="stat-description">Usuários que interagiram com o site</p>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section id="charts-section" class="charts-section" style="display: none;" aria-labelledby="charts-heading">
+                <h2 id="charts-heading" class="sr-only">Gráficos e Visualizações</h2>
+
+                <!-- Feedback by Type Chart -->
+                <div class="chart-container">
+                    <h3>Tipos de Feedback</h3>
+                    <div class="chart" id="feedback-chart" role="img" aria-labelledby="feedback-chart-desc">
+                        <div id="feedback-chart-desc" class="sr-only">
+                            Gráfico de barras mostrando a distribuição dos tipos de feedback recebidos
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disability Distribution -->
+                <div class="chart-container">
+                    <h3>Distribuição por Tipo de Deficiência</h3>
+                    <div class="pie-chart" id="disability-pie" role="img" aria-labelledby="disability-pie-desc"></div>
+                    <div id="disability-pie-desc" class="sr-only">
+                        Gráfico de pizza mostrando a distribuição dos tipos de deficiência dos usuários
+                    </div>
+                    <div class="pie-legend" id="disability-legend"></div>
+                </div>
+
+                <!-- Assistive Technology Usage -->
+                <div class="chart-container">
+                    <h3>Uso de Tecnologias Assistivas</h3>
+                    <div class="chart" id="tech-chart" role="img" aria-labelledby="tech-chart-desc">
+                        <div id="tech-chart-desc" class="sr-only">
+                            Gráfico de barras mostrando o uso de diferentes tecnologias assistivas
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessibility Barriers -->
+                <div class="chart-container">
+                    <h3>Barreiras de Acessibilidade Mais Comuns</h3>
+                    <div class="chart" id="barriers-chart" role="img" aria-labelledby="barriers-chart-desc">
+                        <div id="barriers-chart-desc" class="sr-only">
+                            Gráfico de barras mostrando as barreiras de acessibilidade mais frequentemente relatadas
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline de Feedback -->
+                <div class="chart-container">
+                    <h3>Timeline de Feedback ao Longo do Tempo</h3>
+                    <canvas id="timeline-chart" role="img" aria-labelledby="timeline-chart-desc" width="400" height="300"></canvas>
+                    <div id="timeline-chart-desc" class="sr-only">
+                        Gráfico de linha mostrando a quantidade de feedback ao longo do tempo
+                    </div>
+                </div>
+
+                <!-- Gráfico 3D de Distribuição de Avaliações -->
+                <div class="chart-container">
+                    <h3>Distribuição de Avaliações (Visualização 3D)</h3>
+                    <div id="ratings-3d-chart" style="width: 100%; height: 300px;" role="img" aria-labelledby="ratings-3d-desc"></div>
+                    <div id="ratings-3d-desc" class="sr-only">
+                        Visualização 3D da distribuição de avaliações de 1 a 5 estrelas
+                    </div>
+                </div>
+
+                <!-- Heatmap de Problemas por Tipo de Deficiência -->
+                <div class="chart-container">
+                    <h3>Mapa de Calor: Problemas por Tipo de Deficiência</h3>
+                    <div id="heatmap-chart" style="width: 100%; height: 300px;" role="img" aria-labelledby="heatmap-desc"></div>
+                    <div id="heatmap-desc" class="sr-only">
+                        Mapa de calor mostrando a correlação entre tipos de deficiência e problemas relatados
+                    </div>
+                </div>
+
+                <!-- Nuvem de Palavras dos Feedbacks -->
+                <div class="chart-container">
+                    <h3>Nuvem de Palavras dos Feedbacks</h3>
+                    <div id="wordcloud-chart" style="width: 100%; height: 300px;" role="img" aria-labelledby="wordcloud-desc"></div>
+                    <div id="wordcloud-desc" class="sr-only">
+                        Nuvem de palavras das mensagens de feedback mais frequentes
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Dados Detalhados -->
+            <section class="data-details" aria-labelledby="data-details-heading">
+                <h2 id="data-details-heading">Dados Detalhados</h2>
+                
+                <div class="charts-section">
+                    <!-- Tabela de Feedbacks Recentes -->
+                    <div class="chart-container">
+                        <h3>Feedbacks Recentes</h3>
+                        <div id="recent-feedback" class="data-table-container">
+                            <div class="loading">Carregando feedbacks...</div>
+                        </div>
+                    </div>
+
+                    <!-- Estatísticas Avançadas -->
+                    <div class="chart-container">
+                        <h3>Estatísticas Avançadas</h3>
+                        <div id="advanced-stats" class="advanced-stats-container">
+                            <div class="loading">Calculando estatísticas...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Source Information -->
+            <div class="data-source">
+                <p><strong>Fonte dos Dados:</strong> <span id="data-source-info">Carregando...</span></p>
+                <p><strong>Última Atualização:</strong> <span id="last-update">Carregando...</span></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <p>&copy; 2025 Conexão Digital Inclusiva - Todos os direitos reservados. Desenvolvido com foco em acessibilidade e inclusão.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="js/main.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/supabase-config.js"></script>
+    
+    <script>
+        // Dashboard specific JavaScript
+        class AdvancedDashboard {
+            constructor() {
+                this.isLoading = false;
+                this.rawData = {
+                    feedback: [],
+                    questionnaires: []
+                };
+                this.charts = {};
+                this.init();
+            }
+
+            async init() {
+                await this.loadRawData();
+                this.setupEventListeners();
+                this.initializeTooltip();
+            }
+
+            initializeTooltip() {
+                // Create tooltip element for interactive charts
+                const tooltip = document.createElement('div');
+                tooltip.className = 'chart-tooltip';
+                tooltip.id = 'chart-tooltip';
+                document.body.appendChild(tooltip);
+            }
+
+            setupEventListeners() {
+                const refreshButton = document.getElementById('refresh-data');
+                refreshButton.addEventListener('click', () => this.refreshData());
+
+                // Auto-refresh every 5 minutes
+                setInterval(() => this.loadRawData(), 5 * 60 * 1000);
+            }
+
+            async refreshData() {
+                if (this.isLoading) return;
+                
+                const refreshButton = document.getElementById('refresh-data');
+                refreshButton.disabled = true;
+                refreshButton.textContent = 'Atualizando...';
+                
+                await this.loadRawData();
+                
+                refreshButton.disabled = false;
+                refreshButton.textContent = 'Atualizar Dados';
+            }
+
+            async loadRawData() {
+                if (this.isLoading) return;
+                
+                this.isLoading = true;
+                this.showLoading();
+
+                try {
+                    // Load raw data from Supabase or localStorage
+                    const [feedbackStats, questionnaireStats, rawFeedback, rawQuestionnaires] = await Promise.all([
+                        dbManager.getFeedbackStats(),
+                        dbManager.getQuestionnaireStats(),
+                        this.getRawFeedbackData(),
+                        this.getRawQuestionnaireData()
+                    ]);
+
+                    if (feedbackStats.success && questionnaireStats.success) {
+                        this.rawData.feedback = rawFeedback;
+                        this.rawData.questionnaires = rawQuestionnaires;
+                        
+                        this.displayStats(feedbackStats.data, questionnaireStats.data);
+                        this.displayBasicCharts(feedbackStats.data, questionnaireStats.data);
+                        this.displayAdvancedCharts();
+                        this.displayDataDetails();
+                        this.updateDataSource(feedbackStats.source);
+                        this.hideLoading();
+                        this.hideError();
+                    } else {
+                        throw new Error('Failed to load data');
+                    }
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    this.showError();
+                    this.hideLoading();
+                } finally {
+                    this.isLoading = false;
+                }
+            }
+
+            async getRawFeedbackData() {
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        const { data, error } = await supabaseClient
+                            .from('feedback')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(100);
+                        
+                        if (error) throw error;
+                        return data || [];
+                    } else {
+                        // Fallback to localStorage
+                        const localData = localStorage.getItem('conexao_digital_feedback');
+                        return localData ? JSON.parse(localData) : [];
+                    }
+                } catch (error) {
+                    console.error('Error loading raw feedback data:', error);
+                    return [];
+                }
+            }
+
+            async getRawQuestionnaireData() {
+                try {
+                    if (dbManager.isSupabaseAvailable && supabaseClient) {
+                        const { data, error } = await supabaseClient
+                            .from('questionnaires')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(100);
+                        
+                        if (error) throw error;
+                        return data || [];
+                    } else {
+                        // Fallback to localStorage
+                        const localData = localStorage.getItem('conexao_digital_questionnaires');
+                        return localData ? JSON.parse(localData) : [];
+                    }
+                } catch (error) {
+                    console.error('Error loading raw questionnaire data:', error);
+                    return [];
+                }
+            }
+
+            displayStats(feedbackData, questionnaireData) {
+                // Update statistics cards
+                document.getElementById('total-feedbacks').textContent = feedbackData.totalFeedbacks || 0;
+                document.getElementById('avg-rating').textContent = feedbackData.averageRating || '0.0';
+                document.getElementById('total-responses').textContent = questionnaireData.totalResponses || 0;
+                
+                // Calculate engagement rate based on real data
+                const totalInteractions = (feedbackData.totalFeedbacks || 0) + (questionnaireData.totalResponses || 0);
+                const uniqueUsers = this.calculateUniqueUsers();
+                const engagementRate = uniqueUsers > 0 ? Math.round((totalInteractions / uniqueUsers) * 100) : 0;
+                document.getElementById('engagement-rate').textContent = `${Math.min(engagementRate, 100)}%`;
+            }
+
+            calculateUniqueUsers() {
+                const emails = new Set();
+                this.rawData.feedback.forEach(item => {
+                    if (item.email) emails.add(item.email);
+                });
+                this.rawData.questionnaires.forEach(item => {
+                    if (item.email) emails.add(item.email);
+                });
+                return Math.max(emails.size, 1);
+            }
+
+            displayBasicCharts(feedbackData, questionnaireData) {
+                // Format feedback data for display
+                const formattedFeedbackData = {};
+                if (feedbackData.feedbackByType) {
+                    Object.entries(feedbackData.feedbackByType).forEach(([type, count]) => {
+                        const formattedType = this.formatFeedbackType(type);
+                        formattedFeedbackData[formattedType] = count;
+                    });
+                }
+
+                // Format disability data for display
+                const formattedDisabilityData = {};
+                if (questionnaireData.disabilityDistribution) {
+                    Object.entries(questionnaireData.disabilityDistribution).forEach(([type, count]) => {
+                        const formattedType = this.formatDisabilityType(type);
+                        formattedDisabilityData[formattedType] = count;
+                    });
+                }
+
+                // Display charts with formatted data
+                this.createBarChart('feedback-chart', formattedFeedbackData, 'Tipo de Feedback');
+                this.createPieChart('disability-pie', 'disability-legend', formattedDisabilityData);
+                
+                // Create barriers chart from real data
+                const barriersData = this.extractBarriersFromData();
+                this.createBarChart('barriers-chart', barriersData, 'Barreira');
+            }
+
+            extractBarriersFromData() {
+                const barriers = {};
+                this.rawData.questionnaires.forEach(item => {
+                    if (item.common_problems && Array.isArray(item.common_problems)) {
+                        item.common_problems.forEach(problem => {
+                            const formattedProblem = this.formatCommonProblems(problem);
+                            barriers[formattedProblem] = (barriers[formattedProblem] || 0) + 1;
+                        });
+                    }
+                });
+                return barriers;
+            }
+
+            displayAdvancedCharts() {
+                this.createTimelineChart();
+                this.create3DRatingsChart();
+                this.createHeatmapChart();
+                this.createWordCloudChart();
+            }
+
+            createTimelineChart() {
+                const canvas = document.getElementById('timeline-chart');
+                const ctx = canvas.getContext('2d');
+                
+                // Process data by date
+                const timelineData = this.processTimelineData();
+                
+                // Destroy existing chart if exists
+                if (this.charts.timeline) {
+                    this.charts.timeline.destroy();
+                }
+
+                this.charts.timeline = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: timelineData.labels,
+                        datasets: [
+                            {
+                                label: 'Feedbacks',
+                                data: timelineData.feedbackData,
+                                borderColor: 'rgb(37, 99, 235)',
+                                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Questionários',
+                                data: timelineData.questionnaireData,
+                                borderColor: 'rgb(124, 58, 237)',
+                                backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: {
+                            intersect: false,
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Data'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Quantidade'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true
+                            },
+                            tooltip: {
+                                mode: 'index'
+                            }
+                        }
+                    }
+                });
+            }
+
+            processTimelineData() {
+                const last7Days = this.getLast7Days();
+                const feedbackByDay = {};
+                const questionnaireByDay = {};
+
+                // Initialize with zeros
+                last7Days.forEach(day => {
+                    feedbackByDay[day] = 0;
+                    questionnaireByDay[day] = 0;
+                });
+
+                // Count feedback by day
+                this.rawData.feedback.forEach(item => {
+                    const day = new Date(item.created_at).toISOString().split('T')[0];
+                    if (feedbackByDay.hasOwnProperty(day)) {
+                        feedbackByDay[day]++;
+                    }
+                });
+
+                // Count questionnaires by day
+                this.rawData.questionnaires.forEach(item => {
+                    const day = new Date(item.created_at).toISOString().split('T')[0];
+                    if (questionnaireByDay.hasOwnProperty(day)) {
+                        questionnaireByDay[day]++;
+                    }
+                });
+
+                return {
+                    labels: last7Days.map(day => new Date(day).toLocaleDateString('pt-BR')),
+                    feedbackData: last7Days.map(day => feedbackByDay[day]),
+                    questionnaireData: last7Days.map(day => questionnaireByDay[day])
+                };
+            }
+
+            getLast7Days() {
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const day = new Date();
+                    day.setDate(day.getDate() - i);
+                    days.push(day.toISOString().split('T')[0]);
+                }
+                return days;
+            }
+
+            create3DRatingsChart() {
+                const container = document.getElementById('ratings-3d-chart');
+                container.innerHTML = '';
+
+                // Process ratings data
+                const ratingsData = this.processRatingsData();
+                
+                if (ratingsData.length === 0) {
+                    container.innerHTML = '<div class="chart-error">Nenhum dado de avaliação disponível</div>';
+                    return;
+                }
+
+                // Create 3D visualization using Three.js
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / 300, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                
+                renderer.setSize(container.offsetWidth, 300);
+                renderer.setClearColor(0x000000, 0);
+                container.appendChild(renderer.domElement);
+
+                // Create bars for each rating
+                const colors = [0xff4444, 0xff8844, 0xffaa44, 0x44ff44, 0x4444ff];
+                ratingsData.forEach((count, rating) => {
+                    if (count > 0) {
+                        const geometry = new THREE.BoxGeometry(0.8, count * 0.1, 0.8);
+                        const material = new THREE.MeshBasicMaterial({ color: colors[rating] });
+                        const cube = new THREE.Mesh(geometry, material);
+                        
+                        cube.position.x = rating - 2;
+                        cube.position.y = count * 0.05;
+                        scene.add(cube);
+
+                        // Add label
+                        const loader = new THREE.FontLoader();
+                        // Note: Font loading would need additional setup in production
+                    }
+                });
+
+                camera.position.set(5, 3, 5);
+                camera.lookAt(0, 0, 0);
+
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    scene.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                // Store reference for cleanup
+                this.charts.ratings3d = { renderer, scene, camera };
+            }
+
+            processRatingsData() {
+                const ratings = [0, 0, 0, 0, 0]; // Index 0-4 for ratings 1-5
+                this.rawData.feedback.forEach(item => {
+                    if (item.rating && item.rating >= 1 && item.rating <= 5) {
+                        ratings[item.rating - 1]++;
+                    }
+                });
+                return ratings;
+            }
+
+            createHeatmapChart() {
+                const container = document.getElementById('heatmap-chart');
+                container.innerHTML = '';
+
+                const heatmapData = this.processHeatmapData();
+                
+                if (heatmapData.length === 0) {
+                    container.innerHTML = '<div class="chart-error">Dados insuficientes para mapa de calor</div>';
+                    return;
+                }
+
+                // Create heatmap using D3.js
+                const margin = { top: 50, right: 50, bottom: 100, left: 100 };
+                const width = container.offsetWidth - margin.left - margin.right;
+                const height = 250 - margin.top - margin.bottom;
+
+                const svg = d3.select(container)
+                    .append('svg')
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', height + margin.top + margin.bottom);
+
+                const g = svg.append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                // Create scales
+                const disabilityTypes = [...new Set(heatmapData.map(d => d.disability))];
+                const problemTypes = [...new Set(heatmapData.map(d => d.problem))];
+
+                const xScale = d3.scaleBand()
+                    .domain(problemTypes)
+                    .range([0, width])
+                    .padding(0.1);
+
+                const yScale = d3.scaleBand()
+                    .domain(disabilityTypes)
+                    .range([0, height])
+                    .padding(0.1);
+
+                const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
+                    .domain([0, d3.max(heatmapData, d => d.count)]);
+
+                // Create heatmap cells
+                g.selectAll('.heatmap-cell')
+                    .data(heatmapData)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'heatmap-cell')
+                    .attr('x', d => xScale(d.problem))
+                    .attr('y', d => yScale(d.disability))
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', yScale.bandwidth())
+                    .attr('fill', d => colorScale(d.count))
+                    .attr('stroke', 'white')
+                    .attr('stroke-width', 1);
+
+                // Add axes
+                g.append('g')
+                    .attr('transform', `translate(0,${height})`)
+                    .call(d3.axisBottom(xScale))
+                    .selectAll('text')
+                    .style('text-anchor', 'end')
+                    .attr('dx', '-.8em')
+                    .attr('dy', '.15em')
+                    .attr('transform', 'rotate(-45)');
+
+                g.append('g')
+                    .call(d3.axisLeft(yScale));
+            }
+
+            processHeatmapData() {
+                const heatmapData = [];
+                const combinations = {};
+
+                this.rawData.questionnaires.forEach(item => {
+                    if (item.disability_type && item.common_problems) {
+                        const formattedDisability = this.formatDisabilityType(item.disability_type);
+                        const problems = Array.isArray(item.common_problems) ? item.common_problems : [item.common_problems];
+                        
+                        problems.forEach(problem => {
+                            const formattedProblem = this.formatCommonProblems(problem);
+                            const key = `${formattedDisability}-${formattedProblem}`;
+                            combinations[key] = (combinations[key] || 0) + 1;
+                        });
+                    }
+                });
+
+                Object.entries(combinations).forEach(([key, count]) => {
+                    const [disability, problem] = key.split('-');
+                    heatmapData.push({ disability, problem, count });
+                });
+
+                return heatmapData;
+            }
+
+            createWordCloudChart() {
+                const container = document.getElementById('wordcloud-chart');
+                container.innerHTML = '';
+
+                const wordData = this.processWordCloudData();
+                
+                if (wordData.length === 0) {
+                    container.innerHTML = '<div class="chart-error">Nenhuma mensagem de feedback disponível</div>';
+                    return;
+                }
+
+                // Simple word cloud implementation
+                const maxFreq = Math.max(...wordData.map(d => d.freq));
+                const words = wordData.slice(0, 20); // Top 20 words
+
+                const cloudContainer = d3.select(container)
+                    .append('div')
+                    .style('text-align', 'center')
+                    .style('padding', '20px');
+
+                words.forEach(word => {
+                    const fontSize = Math.max(12, (word.freq / maxFreq) * 24);
+                    const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+                    
+                    cloudContainer.append('span')
+                        .text(word.text)
+                        .style('font-size', `${fontSize}px`)
+                        .style('color', color)
+                        .style('margin', '5px')
+                        .style('display', 'inline-block')
+                        .style('font-weight', 'bold')
+                        .attr('title', `Frequência: ${word.freq}`);
+                });
+            }
+
+            processWordCloudData() {
+                const wordCount = {};
+                const stopWords = new Set(['o', 'a', 'os', 'as', 'um', 'uma', 'e', 'ou', 'mas', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas', 'para', 'por', 'com', 'sem', 'sobre', 'entre', 'até', 'desde', 'que', 'se', 'não', 'é', 'são', 'foi', 'foram', 'está', 'estão', 'ter', 'tem', 'seu', 'sua', 'seus', 'suas', 'meu', 'minha', 'meus', 'minhas']);
+
+                this.rawData.feedback.forEach(item => {
+                    if (item.message) {
+                        const words = item.message.toLowerCase()
+                            .replace(/[^\w\s]/g, '')
+                            .split(/\s+/)
+                            .filter(word => word.length > 3 && !stopWords.has(word));
+                        
+                        words.forEach(word => {
+                            wordCount[word] = (wordCount[word] || 0) + 1;
+                        });
+                    }
+                });
+
+                return Object.entries(wordCount)
+                    .map(([text, freq]) => ({ text, freq }))
+                    .sort((a, b) => b.freq - a.freq);
+            }
+
+            displayDataDetails() {
+                this.displayRecentFeedback();
+                this.displayAdvancedStats();
+            }
+
+            displayRecentFeedback() {
+                const container = document.getElementById('recent-feedback');
+                const recentFeedback = this.rawData.feedback.slice(0, 10);
+
+                if (recentFeedback.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">Nenhum feedback disponível</p>';
+                    return;
+                }
+
+                const table = document.createElement('table');
+                table.className = 'data-table';
+                
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Avaliação</th>
+                            <th>Mensagem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentFeedback.map(item => `
+                            <tr>
+                                <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                                <td>${item.name || 'Anônimo'}</td>
+                                <td>${this.formatFeedbackType(item.type)}</td>
+                                <td>${item.rating ? '⭐'.repeat(item.rating) : 'N/A'}</td>
+                                <td title="${item.message}">${item.message ? item.message.substring(0, 50) + (item.message.length > 50 ? '...' : '') : 'N/A'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+
+                container.innerHTML = '';
+                container.appendChild(table);
+            }
+
+            formatFeedbackType(type) {
+                const types = {
+                    'bug': 'Bug/Erro',
+                    'suggestion': 'Sugestão',
+                    'compliment': 'Elogio',
+                    'complaint': 'Reclamação',
+                    'accessibility': 'Acessibilidade',
+                    'sugestao': 'Sugestão',
+                    'problema': 'Problema',
+                    'elogio': 'Elogio',
+                    'outro': 'Outro'
+                };
+                return types[type] || type;
+            }
+
+            formatDisabilityType(type) {
+                if (!type) return 'Não especificado';
+                
+                const types = {
+                    'visual': 'Deficiência Visual',
+                    'auditiva': 'Deficiência Auditiva',
+                    'motora': 'Deficiência Motora',
+                    'cognitiva': 'Deficiência Cognitiva',
+                    'multipla': 'Deficiência Múltipla',
+                    'nenhuma': 'Nenhuma Deficiência',
+                    'hearing': 'Deficiência Auditiva',
+                    'mobility': 'Deficiência Motora',
+                    'cognitive': 'Deficiência Cognitiva',
+                    'multiple': 'Deficiência Múltipla',
+                    'none': 'Nenhuma Deficiência'
+                };
+                return types[type] || type;
+            }
+
+            formatTechnologies(technologies) {
+                if (!technologies) return 'Não especificado';
+                
+                const techTranslations = {
+                    'screen_reader': 'Leitor de Tela',
+                    'magnifier': 'Lupa/Ampliador',
+                    'voice_recognition': 'Reconhecimento de Voz',
+                    'keyboard_navigation': 'Navegação por Teclado',
+                    'high_contrast': 'Alto Contraste',
+                    'large_fonts': 'Fontes Grandes',
+                    'alternative_keyboard': 'Teclado Alternativo',
+                    'eye_tracker': 'Rastreamento Ocular',
+                    'switch_control': 'Controle por Acionadores',
+                    'braille_display': 'Display Braille'
+                };
+                
+                if (Array.isArray(technologies)) {
+                    if (technologies.length === 0) return 'Nenhuma tecnologia assistiva';
+                    return technologies.map(tech => techTranslations[tech] || tech).join(', ');
+                }
+                
+                return techTranslations[technologies] || technologies;
+            }
+
+            formatCommonProblems(problems) {
+                if (!problems) return 'Não especificado';
+                
+                const problemTranslations = {
+                    'navigation': 'Navegação',
+                    'text_size': 'Tamanho do Texto',
+                    'color_contrast': 'Contraste de Cores',
+                    'audio_controls': 'Controles de Áudio',
+                    'keyboard_access': 'Acesso por Teclado',
+                    'loading_time': 'Tempo de Carregamento',
+                    'form_filling': 'Preenchimento de Formulários',
+                    'image_alt_text': 'Texto Alternativo de Imagens',
+                    'video_captions': 'Legendas de Vídeo',
+                    'complex_layout': 'Layout Complexo'
+                };
+                
+                if (Array.isArray(problems)) {
+                    if (problems.length === 0) return 'Nenhum problema relatado';
+                    return problems.map(problem => problemTranslations[problem] || problem).join(', ');
+                }
+                
+                return problemTranslations[problems] || problems;
+            }
+
+            formatBarriersFrequency(frequency) {
+                if (!frequency) return 'Não especificado';
+                
+                const frequencies = {
+                    'sempre': 'Sempre',
+                    'frequentemente': 'Frequentemente',
+                    'as-vezes': 'Às vezes',
+                    'raramente': 'Raramente',
+                    'nunca': 'Nunca',
+                    'always': 'Sempre',
+                    'frequently': 'Frequentemente',
+                    'sometimes': 'Às vezes',
+                    'rarely': 'Raramente',
+                    'never': 'Nunca'
+                };
+                return frequencies[frequency] || frequency;
+            }
+
+            displayAdvancedStats() {
+                const container = document.getElementById('advanced-stats');
+                
+                const stats = this.calculateAdvancedStats();
+                
+                container.innerHTML = `
+                    <div class="stat-item">
+                        <span class="value">${stats.avgResponseTime}</span>
+                        <div class="label">Tempo Médio de Resposta (dias)</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="value">${stats.satisfactionRate}%</span>
+                        <div class="label">Taxa de Satisfação</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="value">${stats.completionRate}%</span>
+                        <div class="label">Taxa de Conclusão</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="value">${stats.criticalIssues}</span>
+                        <div class="label">Problemas Críticos</div>
+                    </div>
+                `;
+            }
+
+            calculateAdvancedStats() {
+                const ratings = this.rawData.feedback.filter(item => item.rating).map(item => item.rating);
+                const satisfactionRate = ratings.length > 0 ? Math.round((ratings.filter(r => r >= 4).length / ratings.length) * 100) : 0;
+                
+                const criticalIssues = this.rawData.feedback.filter(item => 
+                    item.type === 'bug' || item.type === 'complaint' || item.type === 'accessibility'
+                ).length;
+
+                return {
+                    avgResponseTime: '2.5', // Mock data - would calculate from actual response times
+                    satisfactionRate,
+                    completionRate: 85, // Mock data
+                    criticalIssues
+                };
+            }
+
+            // Métodos auxiliares originais mantidos para compatibilidade
+            createBarChart(containerId, data, labelType) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+
+                if (Object.keys(data).length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">Nenhum dado disponível</p>';
+                    return;
+                }
+
+                const maxValue = Math.max(...Object.values(data));
+                const maxHeight = 250;
+
+                Object.entries(data).forEach(([key, value]) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.style.height = `${(value / maxValue) * maxHeight}px`;
+                    bar.setAttribute('role', 'img');
+                    bar.setAttribute('aria-label', `${key}: ${value} ${labelType.toLowerCase()}s`);
+                    bar.setAttribute('tabindex', '0');
+
+                    const label = document.createElement('div');
+                    label.className = 'bar-label';
+                    label.textContent = key.length > 10 ? key.substring(0, 10) + '...' : key;
+
+                    const valueLabel = document.createElement('div');
+                    valueLabel.className = 'bar-value';
+                    valueLabel.textContent = value;
+
+                    bar.appendChild(label);
+                    bar.appendChild(valueLabel);
+                    container.appendChild(bar);
+                });
+            }
+
+            createPieChart(pieId, legendId, data) {
+                const pieElement = document.getElementById(pieId);
+                const legendElement = document.getElementById(legendId);
+
+                if (Object.keys(data).length === 0) {
+                    pieElement.innerHTML = '<p style="text-align: center; color: #666; line-height: 200px;">Nenhum dado disponível</p>';
+                    legendElement.innerHTML = '';
+                    return;
+                }
+
+                const colors = ['#2563eb', '#7c3aed', '#dc2626', '#059669', '#ea580c'];
+                const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+                
+                let currentAngle = 0;
+                let gradientStops = [];
+                
+                legendElement.innerHTML = '';
+
+                Object.entries(data).forEach(([key, value], index) => {
+                    const percentage = (value / total) * 100;
+                    const angle = (value / total) * 360;
+                    
+                    gradientStops.push(`${colors[index % colors.length]} ${currentAngle}deg ${currentAngle + angle}deg`);
+                    currentAngle += angle;
+
+                    // Create legend item
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background-color: ${colors[index % colors.length]}"></div>
+                        <span>${key} (${percentage.toFixed(1)}%)</span>
+                    `;
+                    legendElement.appendChild(legendItem);
+                });
+
+                pieElement.style.background = `conic-gradient(${gradientStops.join(', ')})`;
+                pieElement.setAttribute('aria-label', `Gráfico de pizza mostrando distribuição: ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(', ')}`);
+            }
+
+            showLoading() {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('stats-section').style.display = 'none';
+                document.getElementById('charts-section').style.display = 'none';
+            }
+
+            hideLoading() {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('stats-section').style.display = 'grid';
+                document.getElementById('charts-section').style.display = 'grid';
+            }
+
+            showError() {
+                document.getElementById('error').style.display = 'block';
+            }
+
+            hideError() {
+                document.getElementById('error').style.display = 'none';
+            }
+
+            updateDataSource(source) {
+                const sourceInfo = document.getElementById('data-source-info');
+                const lastUpdate = document.getElementById('last-update');
+                
+                if (source === 'supabase') {
+                    sourceInfo.textContent = 'Supabase Database (Tempo Real)';
+                } else {
+                    sourceInfo.textContent = 'Armazenamento Local (Demonstração)';
+                }
+                
+                lastUpdate.textContent = new Date().toLocaleString('pt-BR');
+            }
+
+            // Cleanup method for 3D charts
+            cleanup() {
+                if (this.charts.ratings3d) {
+                    this.charts.ratings3d.renderer.dispose();
+                }
+                Object.values(this.charts).forEach(chart => {
+                    if (chart && typeof chart.destroy === 'function') {
+                        chart.destroy();
+                    }
+                });
+            }
+        }
+
+        // Initialize advanced dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for dbManager to be available
+            setTimeout(() => {
+                window.dashboard = new AdvancedDashboard();
+                
+                // Cleanup on page unload
+                window.addEventListener('beforeunload', () => {
+                    if (window.dashboard) {
+                        window.dashboard.cleanup();
+                    }
+                });
+            }, 1000);
+        });
+
+        // Add keyboard navigation for charts
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Tab') {
+                // Ensure chart elements are properly focusable
+                const chartElements = document.querySelectorAll('.bar, canvas, svg');
+                chartElements.forEach(element => {
+                    if (!element.hasAttribute('tabindex')) {
+                        element.setAttribute('tabindex', '0');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+/* Accessibility Floating Button */
+.accessibility-float-btn {
+    position: fixed;
+    bottom: 140px; /* Positioned above the AI chatbot button */
+    right: var(--spacing-xl);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    font-size: var(--font-size-xl);
+    cursor: pointer;
+    box-shadow: var(--shadow-large);
+    transition: var(--transition-normal);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accessibility-float-btn:hover,
+.accessibility-float-btn:focus {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #3730a3, #5b21b6);
+}
+
+.accessibility-float-btn.active {
+    background: linear-gradient(135deg, #059669, #0d9488);
+}
+
+/* Accessibility Toolbar - Updated for floating design */
+.accessibility-toolbar {
+    position: fixed;
+    bottom: 210px; /* Above the floating button */
+    right: var(--spacing-xl);
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    z-index: 1002;
+    box-shadow: var(--shadow-large);
+    min-width: 200px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all var(--transition-normal);
+}
+
+.accessibility-toolbar.active {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.accessibility-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    transition: var(--transition-fast);
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.accessibility-btn:hover,
+.accessibility-btn:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+.accessibility-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.accessibility-btn i {
+    font-size: var(--font-size-base);
+    min-width: 20px;
+}
+
+.accessibility-btn span {
+    font-size: var(--font-size-sm);
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    --primary-color: #0000ff;
+    --secondary-color: #800080;
+    --accent-color: #008000;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --background-light: #ffffff;
+    --background-gray: #f0f0f0;
+    --border-color: #000000;
+}
+
+body.high-contrast .hero {
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast .btn-primary {
+    background-color: #0000ff;
+    color: #ffffff;
+    border: 2px solid #000000;
+}
+
+body.high-contrast .btn-secondary {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+}
+
+body.high-contrast .btn-outline {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+}
+
+body.high-contrast .diversity-card,
+body.high-contrast .tech-item {
+    border: 2px solid #000000;
+}
+
+body.high-contrast .nav-menu a:hover,
+body.high-contrast .nav-menu a:focus {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast .card-link:hover,
+body.high-contrast .card-link:focus {
+    background-color: #000000;
+    color: #ffffff;
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Large Font Mode */
+body.large-font {
+    font-size: 1.25rem;
+}
+
+body.large-font .hero-title {
+    font-size: 3rem;
+}
+
+body.large-font .hero-subtitle {
+    font-size: 1.5rem;
+}
+
+body.large-font section h2 {
+    font-size: 2.5rem;
+}
+
+body.large-font .diversity-card h3,
+body.large-font .tech-item h3 {
+    font-size: 1.5rem;
+}
+
+body.large-font .btn {
+    font-size: 1.125rem;
+    padding: var(--spacing-lg) var(--spacing-2xl);
+}
+
+body.large-font .nav-menu a {
+    font-size: 1.125rem;
+}
+
+/* Screen Reader Only Content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus Indicators */
+.focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Voice Command Indicator */
+.voice-listening {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    z-index: 1003;
+    display: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--primary-color);
+}
+
+.voice-listening.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.voice-listening .pulse {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    margin: 0 auto var(--spacing-md);
+    animation: pulse 1.5s infinite;
+}
+
+.voice-listening p {
+    margin: 0;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+}
+
+/* Voice Error Messages */
+.voice-error {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #dc3545;
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    z-index: 1004;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    animation: slideInRight 0.3s ease-out;
+}
+
+.voice-error::before {
+    content: "⚠️ ";
+    margin-right: var(--spacing-xs);
+}
+
+/* Voice Commands Button States */
+.accessibility-btn[aria-pressed="true"] {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.5);
+}
+
+.accessibility-btn[aria-pressed="true"]::after {
+    content: " (Ativo)";
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Reading Highlight */
+.reading-highlight {
+    background-color: #ffff00 !important;
+    color: #000000 !important;
+    padding: 2px 4px;
+    border-radius: var(--radius-sm);
+}
+
+/* Keyboard Navigation Styles */
+.keyboard-navigation *:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    z-index: 1;
+    position: relative;
+}
+
+/* Skip Links */
+.skip-links {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: var(--spacing-sm);
+    z-index: 1004;
+}
+
+.skip-links:focus-within {
+    top: 0;
+}
+
+.skip-links a {
+    color: white;
+    text-decoration: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin-right: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.skip-links a:focus {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+    .pulse {
+        animation: none;
+    }
+    
+    .diversity-card:hover,
+    .tech-item:hover,
+    .demo-button:hover,
+    .ai-chatbot-btn:hover {
+        transform: none;
+    }
+}
+
+/* Color Preferences */
+@media (prefers-color-scheme: dark) {
+    body:not(.high-contrast) {
+        --text-primary: #f9fafb;
+        --text-secondary: #d1d5db;
+        --background-light: #1f2937;
+        --background-gray: #111827;
+        --border-color: #374151;
+    }
+}
+
+/* Responsive Accessibility Toolbar */
+@media (max-width: 768px) {
+    .accessibility-toolbar {
+        flex-wrap: wrap;
+        padding: var(--spacing-xs);
+        gap: var(--spacing-xs);
+    }
+    
+    .accessibility-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+    
+    .accessibility-btn span {
+        display: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .accessibility-toolbar,
+    .ai-chatbot-btn,
+    .chatbot-modal {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .hero {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+/* Text Selection */
+::selection {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+::-moz-selection {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Custom Scrollbar for Better Accessibility */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* Tooltip Styles for Accessibility */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--text-primary);
+    color: var(--background-light);
+    text-align: center;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    font-size: var(--font-size-sm);
+}
+
+.tooltip:hover .tooltiptext,
+.tooltip:focus .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Error and Success States */
+.error {
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+.success {
+    color: #059669;
+    border-color: #059669;
+}
+
+.warning {
+    color: #d97706;
+    border-color: #d97706;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
