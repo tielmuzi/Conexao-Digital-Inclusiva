@@ -145,13 +145,17 @@ Resposta:`;
             
             'leitor de tela': 'Leitores de tela são softwares que convertem texto em fala ou braille. Exemplos populares incluem NVDA (gratuito), JAWS e VoiceOver (Mac/iOS). Para tornar seu conteúdo compatível, use textos alternativos em imagens e estrutura HTML semântica.',
             
-            'alto contraste': 'O modo de alto contraste melhora a legibilidade para pessoas com baixa visão ou daltonismo. Nosso site oferece essa funcionalidade - experimente o botão "Alto Contraste" na barra de ferramentas de acessibilidade!',
+            'alto contraste': 'O modo de alto contraste ajuda pessoas com baixa visão ou daltonismo. Use nosso botão de alto contraste no canto inferior direito da página para experimentar.',
             
             'navegação teclado': 'A navegação por teclado permite usar o site sem mouse. Use Tab para avançar, Shift+Tab para voltar, Enter/Espaço para ativar elementos. Todos os elementos interativos devem ser acessíveis por teclado.',
             
             'wcag': 'As WCAG (Web Content Accessibility Guidelines) são diretrizes internacionais para acessibilidade web. Elas se baseiam em 4 princípios: Perceptível, Operável, Compreensível e Robusto. Recomenda-se seguir o nível AA.',
             
             'neurodiversidade': 'Neurodiversidade refere-se à variação natural no funcionamento cerebral, incluindo autismo, TDAH, dislexia. Para sites acessíveis, considere: linguagem clara, navegação consistente, evitar elementos que piscam e oferecer múltiplas formas de interação.',
+
+            'deficiência': 'Pessoas com deficiência enfrentam barreiras digitais como falta de textos alternativos, navegação difícil, conteúdo inacessível. Acessibilidade digital visa eliminar essas barreiras para garantir igualdade de acesso à informação e serviços online.',
+
+            'pcd': 'Pessoas com deficiência (PCD) incluem indivíduos com deficiências visuais, auditivas, motoras e cognitivas. A acessibilidade digital é crucial para garantir que PCDs possam acessar informações, serviços e oportunidades online de forma igualitária.',
             
             'comandos de voz': 'Nosso site suporta comandos de voz! Ative clicando no botão do microfone. Você pode dizer "ir para sobre", "ativar alto contraste", "ler página" e muito mais. Diga "ajuda" para ver todos os comandos.',
             
@@ -165,7 +169,7 @@ Resposta:`;
             
             'feedback': 'Adoramos receber feedback! Use nossa página de Feedback para reportar problemas ou sugerir melhorias. Seus comentários nos ajudam a tornar o site mais acessível para todos.',
             
-            'questionário': 'Nosso questionário na seção Comunidade coleta dados sobre necessidades de acessibilidade. As respostas são anônimas e ajudam a identificar as principais barreiras digitais enfrentadas pelos usuários.'
+            'questionário': 'Nosso questionário na seção Feedback coleta dados sobre necessidades de acessibilidade. As respostas são anônimas e ajudam a identificar as principais barreiras digitais enfrentadas pelos usuários.'
         };
         
         // Find matching response
@@ -180,7 +184,7 @@ Resposta:`;
             return 'Ótima pergunta! Estou aqui para ajudar com questões de acessibilidade digital. Posso explicar sobre leitores de tela, navegação por teclado, alto contraste, comandos de voz, ou qualquer outro aspecto da acessibilidade. O que você gostaria de saber?';
         }
         
-        if (lowerMessage.includes('obrigad') || lowerMessage.includes('valeu')) {
+        if (lowerMessage.includes('obrigado') || lowerMessage.includes('valeu')) {
             return 'De nada! Fico feliz em ajudar. Se tiver mais dúvidas sobre acessibilidade digital, estarei aqui. Lembre-se: a acessibilidade beneficia a todos!';
         }
         

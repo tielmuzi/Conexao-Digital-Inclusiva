@@ -392,9 +392,21 @@ function generateBotResponse(message) {
     const responses = {
         'acessibilidade': 'A acessibilidade digital é fundamental para garantir que todas as pessoas possam usar a web. Posso explicar sobre leitores de tela, navegação por teclado ou outras tecnologias assistivas.',
         'leitor de tela': 'Leitores de tela são softwares que convertem texto em fala ou braille. Exemplos incluem NVDA, JAWS e VoiceOver. É importante usar textos alternativos em imagens e estrutura semântica no HTML.',
-        'alto contraste': 'O modo de alto contraste ajuda pessoas com baixa visão ou daltonismo. Use nosso botão de alto contraste no topo da página para experimentar.',
+        'alto contraste': 'O modo de alto contraste ajuda pessoas com baixa visão ou daltonismo. Use nosso botão de alto contraste no canto inferior direito da página para experimentar.',
         'navegação': 'Para navegar pelo site, use as teclas Tab e Shift+Tab. Pressione Enter ou Espaço para ativar links e botões. Use as setas para navegar em menus.',
-        'ajuda': 'Posso ajudar com informações sobre acessibilidade, navegação do site, tecnologias assistivas e muito mais. O que você gostaria de saber?'
+        'ajuda': 'Posso ajudar com informações sobre acessibilidade, navegação do site, tecnologias assistivas e muito mais. O que você gostaria de saber?',
+        'navegação teclado': 'A navegação por teclado permite usar o site sem mouse. Use Tab para avançar, Shift+Tab para voltar, Enter/Espaço para ativar elementos. Todos os elementos interativos devem ser acessíveis por teclado.',    
+        'wcag': 'As WCAG (Web Content Accessibility Guidelines) são diretrizes internacionais para acessibilidade web. Elas se baseiam em 4 princípios: Perceptível, Operável, Compreensível e Robusto. Recomenda-se seguir o nível AA.',
+        'neurodiversidade': 'Neurodiversidade refere-se à variação natural no funcionamento cerebral, incluindo autismo, TDAH, dislexia. Para sites acessíveis, considere: linguagem clara, navegação consistente, evitar elementos que piscam e oferecer múltiplas formas de interação.',
+        'deficiência': 'Pessoas com deficiência enfrentam barreiras digitais como falta de textos alternativos, navegação difícil, conteúdo inacessível. Acessibilidade digital visa eliminar essas barreiras para garantir igualdade de acesso à informação e serviços online.',
+        'pcd': 'Pessoas com deficiência (PCD) incluem indivíduos com deficiências visuais, auditivas, motoras e cognitivas. A acessibilidade digital é crucial para garantir que PCDs possam acessar informações, serviços e oportunidades online de forma igualitária.',
+        'comandos de voz': 'Nosso site suporta comandos de voz! Ative clicando no botão do microfone. Você pode dizer "ir para sobre", "ativar alto contraste", "ler página" e muito mais. Diga "ajuda" para ver todos os comandos.',
+        'ods 10': 'O ODS 10 visa reduzir desigualdades. A acessibilidade digital é fundamental para isso, garantindo que pessoas com deficiência tenham as mesmas oportunidades de acesso à informação, educação e emprego online.',
+        'como navegar': 'Para navegar no site: use Tab para mover entre elementos, Enter para ativar links, setas para menus. Temos comandos de voz e um leitor de tela integrado. Experimente os botões de acessibilidade no topo!',
+        'tecnologias assistivas': 'Tecnologias assistivas incluem: leitores de tela, magnificadores, teclados especiais, dispositivos de entrada por movimento ocular, software de reconhecimento de voz. Cada pessoa tem necessidades únicas.',
+        'simulador': 'Nosso simulador na página "Importância" mostra como pessoas com diferentes deficiências experimentam sites inacessíveis vs. acessíveis. É uma ferramenta educativa poderosa!',
+        'feedback': 'Adoramos receber feedback! Use nossa página de Feedback para reportar problemas ou sugerir melhorias. Seus comentários nos ajudam a tornar o site mais acessível para todos.',
+        'questionário': 'Nosso questionário na seção Feedback coleta dados sobre necessidades de acessibilidade. As respostas são anônimas e ajudam a identificar as principais barreiras digitais enfrentadas pelos usuários.'
     };
     
     const lowerMessage = message.toLowerCase();
@@ -405,7 +417,7 @@ function generateBotResponse(message) {
         }
     }
     
-    return 'Obrigado pela sua pergunta! Para informações mais específicas sobre acessibilidade, recomendo explorar nossas seções sobre Tecnologias e Importância da Acessibilidade.';
+    return 'Olá! Para informações mais específicas sobre acessibilidade, recomendo explorar nossas seções sobre Tecnologias e Importância da Acessibilidade.';
 }
 
 function initializeDemo() {
