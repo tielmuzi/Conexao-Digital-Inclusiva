@@ -180,7 +180,7 @@ Resposta:`;
             return 'Ótima pergunta! Estou aqui para ajudar com questões de acessibilidade digital. Posso explicar sobre leitores de tela, navegação por teclado, alto contraste, comandos de voz, ou qualquer outro aspecto da acessibilidade. O que você gostaria de saber?';
         }
         
-        if (lowerMessage.includes('obrigad') || lowerMessage.includes('valeu')) {
+        if (lowerMessage.includes('obrigado') || lowerMessage.includes('valeu')) {
             return 'De nada! Fico feliz em ajudar. Se tiver mais dúvidas sobre acessibilidade digital, estarei aqui. Lembre-se: a acessibilidade beneficia a todos!';
         }
         
