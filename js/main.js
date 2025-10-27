@@ -392,7 +392,7 @@ function generateBotResponse(message) {
     const responses = {
         'acessibilidade': 'A acessibilidade digital é fundamental para garantir que todas as pessoas possam usar a web. Posso explicar sobre leitores de tela, navegação por teclado ou outras tecnologias assistivas.',
         'leitor de tela': 'Leitores de tela são softwares que convertem texto em fala ou braille. Exemplos incluem NVDA, JAWS e VoiceOver. É importante usar textos alternativos em imagens e estrutura semântica no HTML.',
-        'alto contraste': 'O modo de alto contraste ajuda pessoas com baixa visão ou daltonismo. Use nosso botão de alto contraste no topo da página para experimentar.',
+        'alto contraste': 'O modo de alto contraste ajuda pessoas com baixa visão ou daltonismo. Use nosso botão de alto contraste no inferior da página em cima do chatbot para experimentar.',
         'navegação': 'Para navegar pelo site, use as teclas Tab e Shift+Tab. Pressione Enter ou Espaço para ativar links e botões. Use as setas para navegar em menus.',
         'ajuda': 'Posso ajudar com informações sobre acessibilidade, navegação do site, tecnologias assistivas e muito mais. O que você gostaria de saber?'
     };
@@ -405,7 +405,7 @@ function generateBotResponse(message) {
         }
     }
     
-    return 'Obrigado pela sua pergunta! Para informações mais específicas sobre acessibilidade, recomendo explorar nossas seções sobre Tecnologias e Importância da Acessibilidade.';
+    return 'Olá! Para informações mais específicas sobre acessibilidade, recomendo explorar nossas seções sobre Tecnologias e Importância da Acessibilidade.';
 }
 
 function initializeDemo() {
