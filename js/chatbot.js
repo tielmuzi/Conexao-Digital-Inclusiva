@@ -1,10 +1,14 @@
 // Chatbot integration with Gemini AI
 class AccessibilityChatbot {
     constructor() {
-        this.apiKey = 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M'; // Will be set from environment or config
+        // Usa configuração externa se disponível, senão usa fallback
+        this.apiKey = (typeof GEMINI_CONFIG !== 'undefined' && GEMINI_CONFIG.apiKey) ? 
+                      GEMINI_CONFIG.apiKey : 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M';
+        
         this.apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
         this.conversationHistory = [];
         this.isInitialized = false;
+        this.useSimulatedResponses = false;
         
         this.init();
     }
@@ -19,14 +23,18 @@ class AccessibilityChatbot {
     }
     
     loadApiKey() {
-        // In a real implementation, this would come from environment variables
-        // For demo purposes, we'll use a placeholder
-        this.apiKey = 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M';
+        // Verifica se tem função de verificação de config disponível
+        const isConfigured = (typeof isApiKeyConfigured !== 'undefined') ? 
+                            isApiKeyConfigured() : 
+                            (this.apiKey && this.apiKey !== 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M');
         
-        // Check if API key is available
-        if (!this.apiKey || this.apiKey === 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M') {
-            console.warn('API Key do Gemini não configurada. Usando respostas simuladas.');
+        if (!isConfigured) {
+            console.warn('⚠️ API Key não configurada. Usando respostas simuladas.');
+            console.info('💡 Para ativar IA: configure sua API key em js/gemini-config.js');
             this.useSimulatedResponses = true;
+        } else {
+            console.log('✅ API Key configurada - IA Gemini ativa');
+            this.useSimulatedResponses = false;
         }
     }
     
@@ -81,27 +89,46 @@ class AccessibilityChatbot {
     }
     
     async getBotResponse(message) {
-        if (this.useSimulatedResponses) {
+        // Verifica se tem uma API key válida configurada
+        const isConfigured = (typeof isApiKeyConfigured !== 'undefined') ? 
+                            isApiKeyConfigured() : 
+                            (this.apiKey && this.apiKey !== 'AIzaSyCK_C2FmrfRG4aEB1fRjnmBF4NkDkGIz9M');
+        
+        if (!isConfigured) {
             return this.getSimulatedResponse(message);
         }
         
         try {
+            // Usa configuração avançada se disponível
+            const requestBody = {
+                contents: [{
+                    parts: [{
+                        text: this.buildPrompt(message)
+                    }]
+                }]
+            };
+            
+            // Adiciona configurações avançadas se disponíveis
+            if (typeof GEMINI_CONFIG !== 'undefined') {
+                if (GEMINI_CONFIG.generationConfig) {
+                    requestBody.generationConfig = GEMINI_CONFIG.generationConfig;
+                }
+                if (GEMINI_CONFIG.safetySettings) {
+                    requestBody.safetySettings = GEMINI_CONFIG.safetySettings;
+                }
+            }
+            
             const response = await fetch(`${this.apiUrl}?key=${this.apiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: this.buildPrompt(message)
-                        }]
-                    }]
-                })
+                body: JSON.stringify(requestBody)
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.error(`Erro HTTP: ${response.status}`);
+                return this.getSimulatedResponse(message);
             }
             
             const data = await response.json();
@@ -138,6 +165,14 @@ Resposta:`;
     
     getSimulatedResponse(message) {
         const lowerMessage = message.toLowerCase();
+        
+        // Comando para mostrar status da API
+        if (message === '/status') {
+            const status = this.useSimulatedResponses ? 
+                '🤖 Usando respostas simuladas (API key não configurada)' : 
+                '🧠 IA Gemini ativa e funcionando';
+            return `📊 **Status do Chatbot:** ${status}`;
+        }
         
         // Accessibility-focused responses
         const responses = {

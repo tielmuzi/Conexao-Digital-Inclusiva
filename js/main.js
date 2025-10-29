@@ -243,6 +243,8 @@ const App = {
                 }
             });
 
+            // COMENTADO: Conflito com o chatbot.js - removido para evitar duplicação
+            /*
             if (sendButton && chatInput) {
                 sendButton.addEventListener('click', function() {
                     const message = chatInput.value.trim();
@@ -265,6 +267,7 @@ const App = {
                     }
                 });
             }
+            */
         }
     },
 

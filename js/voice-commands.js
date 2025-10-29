@@ -369,7 +369,7 @@ function processVoiceCommand(command) {
     
     const commands = {
         // Navigation commands
-        'ir para home': () => navigateTo('index.html'),
+       
         'ir para início': () => navigateTo('index.html'),
         'ir para sobre': () => navigateTo('sobre.html'),
         'ir para importância': () => navigateTo('importancia.html'),
@@ -662,6 +662,7 @@ ACESSIBILIDADE:
 - "Ativar alto contraste" / "Desativar alto contraste"
 - "Aumentar fonte" / "Fonte normal"
 - "Ativar leitor" / "Desativar leitor"
+- "Desativar comando de voz"
 
 ASSISTENTE:
 - "Abrir assistente" / "Abrir chatbot"
