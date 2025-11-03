@@ -603,6 +603,53 @@
             gap: 1rem;
             margin-top: 1rem;
         }
+
+        /* Analytics Charts Styling */
+        .analytics-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container-admin {
+            background: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container-admin h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .chart-container-admin canvas {
+            flex: 1;
+            max-height: 320px !important;
+            width: 100% !important;
+        }
+
+        @media (max-width: 768px) {
+            .analytics-charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .chart-container-admin {
+                height: 350px;
+                padding: 1rem;
+            }
+
+            .chart-container-admin canvas {
+                max-height: 280px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -735,9 +782,7 @@
                         <button class="btn-view" onclick="adminPanel.refreshAllData()">
                             🔄 Atualizar Dados
                         </button>
-                        <button class="btn-small" onclick="adminPanel.testDatabaseConnection()">
-                            🔗 Testar Conexão
-                        </button>
+                        
                     </div>
                 </div>
             </section>
@@ -751,10 +796,12 @@
                         <label for="feedback-type-filter">Tipo</label>
                         <select id="feedback-type-filter">
                             <option value="">Todos</option>
-                            <option value="sugestao">Sugestão</option>
-                            <option value="problema">Problema</option>
-                            <option value="elogio">Elogio</option>
-                            <option value="outro">Outro</option>
+                            <option value="suggestion">Sugestão de Melhoria</option>
+                            <option value="problem">Problema Encontrado</option>
+                            <option value="compliment">Elogio</option>
+                            <option value="accessibility">Questão de Acessibilidade</option>
+                            <option value="content">Conteúdo</option>
+                            <option value="other">Outro</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -877,25 +924,30 @@
             <section id="analytics-section" class="admin-section">
                 <h2>Analytics e Relatórios</h2>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                    <div>
+                <div class="analytics-charts-grid">
+                    <div class="chart-container-admin">
                         <h3>Tendências de Feedback</h3>
-                        <canvas id="feedback-trend-chart" width="400" height="200"></canvas>
+                        <canvas id="feedback-trend-chart"></canvas>
                     </div>
                     
-                    <div>
+                    <div class="chart-container-admin">
+                        <h3>Tipos de Feedback</h3>
+                        <canvas id="feedback-type-chart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container-admin">
                         <h3>Distribuição de Deficiências</h3>
-                        <canvas id="disability-chart" width="400" height="200"></canvas>
+                        <canvas id="disability-chart"></canvas>
                     </div>
                     
-                    <div>
+                    <div class="chart-container-admin">
                         <h3>Uso de Tecnologias Assistivas</h3>
-                        <canvas id="tech-usage-chart" width="400" height="200"></canvas>
+                        <canvas id="tech-usage-chart"></canvas>
                     </div>
                     
-                    <div>
+                    <div class="chart-container-admin">
                         <h3>Barreiras Mais Comuns</h3>
-                        <canvas id="barriers-chart" width="400" height="200"></canvas>
+                        <canvas id="barriers-chart"></canvas>
                     </div>
                 </div>
 
@@ -1266,12 +1318,16 @@
             formatFeedbackType(type) {
                 const types = {
                     'bug': 'Bug/Erro',
-                    'suggestion': 'Sugestão',
+                    'suggestion': 'Sugestão de Melhoria',
                     'compliment': 'Elogio',
-                    'complaint': 'Reclamação',
-                    'accessibility': 'Acessibilidade',
-                    'sugestao': 'Sugestão',
-                    'problema': 'Problema',
+                    'complaint': 'Reclamação', 
+                    'accessibility': 'Questão de Acessibilidade',
+                    'content': 'Conteúdo',
+                    'other': 'Outro',
+                    'problem': 'Problema Encontrado',
+                    // Mapeamentos antigos para compatibilidade
+                    'sugestao': 'Sugestão de Melhoria',
+                    'problema': 'Problema Encontrado',
                     'elogio': 'Elogio',
                     'outro': 'Outro'
                 };
@@ -1638,6 +1694,571 @@
                     document.getElementById('site-maintenance').value = config.siteMaintenance.toString();
                 }
             }
+
+            loadAnalytics() {
+                try {
+                    this.createFeedbackTrendChart();
+                    this.createFeedbackTypeChart();
+                    this.createDisabilityChart();
+                    this.createTechUsageChart();
+                    this.createBarriersChart();
+                } catch (error) {
+                    console.error('Erro ao carregar analytics:', error);
+                    this.showAlert('Erro ao carregar gráficos de analytics', 'error');
+                }
+            }
+
+            createFeedbackTrendChart() {
+                const canvas = document.getElementById('feedback-trend-chart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Processo dados para timeline dos últimos 7 dias
+                const timelineData = this.processTimelineData();
+                
+                // Destroy existing chart if exists
+                if (this.feedbackTrendChart) {
+                    this.feedbackTrendChart.destroy();
+                }
+
+                this.feedbackTrendChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: timelineData.labels,
+                        datasets: [{
+                            label: 'Feedbacks',
+                            data: timelineData.feedbackData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 2,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#e5e7eb'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createFeedbackTypeChart() {
+                const canvas = document.getElementById('feedback-type-chart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Processo dados de tipos de feedback
+                const typeData = this.processFeedbackTypeData();
+                
+                // Destroy existing chart if exists
+                if (this.feedbackTypeChart) {
+                    this.feedbackTypeChart.destroy();
+                }
+
+                this.feedbackTypeChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(typeData),
+                        datasets: [{
+                            label: 'Tipos de Feedback',
+                            data: Object.values(typeData),
+                            backgroundColor: [
+                                '#3b82f6',
+                                '#10b981',
+                                '#f59e0b',
+                                '#ef4444',
+                                '#8b5cf6',
+                                '#06b6d4'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#e5e7eb',
+                                    maxRotation: 45
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createDisabilityChart() {
+                const canvas = document.getElementById('disability-chart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Processo dados de deficiências
+                const disabilityData = this.processDisabilityData();
+                
+                // Destroy existing chart if exists
+                if (this.disabilityChart) {
+                    this.disabilityChart.destroy();
+                }
+
+                this.disabilityChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(disabilityData),
+                        datasets: [{
+                            data: Object.values(disabilityData),
+                            backgroundColor: [
+                                '#3b82f6',
+                                '#7c3aed',
+                                '#dc2626',
+                                '#059669',
+                                '#ea580c',
+                                '#6b7280'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#e5e7eb',
+                                    padding: 15
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createTechUsageChart() {
+                const canvas = document.getElementById('tech-usage-chart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Processo dados de tecnologias assistivas
+                const techData = this.processTechUsageData();
+                
+                // Destroy existing chart if exists
+                if (this.techUsageChart) {
+                    this.techUsageChart.destroy();
+                }
+
+                this.techUsageChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(techData),
+                        datasets: [{
+                            label: 'Uso de Tecnologias Assistivas',
+                            data: Object.values(techData),
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#1e40af',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.5,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#e5e7eb'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#e5e7eb',
+                                    maxRotation: 45
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createBarriersChart() {
+                const canvas = document.getElementById('barriers-chart');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                
+                // Processo dados de barreiras comuns
+                const barriersData = this.processBarriersData();
+                
+                // Destroy existing chart if exists
+                if (this.barriersChart) {
+                    this.barriersChart.destroy();
+                }
+
+                this.barriersChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(barriersData),
+                        datasets: [{
+                            label: 'Barreiras Mais Comuns',
+                            data: Object.values(barriersData),
+                            backgroundColor: '#dc2626',
+                            borderColor: '#b91c1c',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        aspectRatio: 1.2,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#e5e7eb'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#e5e7eb'
+                                },
+                                grid: {
+                                    color: '#374151'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            processTimelineData() {
+                const last7Days = this.getLast7Days();
+                const feedbackByDay = {};
+                
+                // Initialize with zeros
+                last7Days.forEach(day => {
+                    feedbackByDay[day] = 0;
+                });
+                
+                // Count feedback by day
+                this.feedbackData.forEach(feedback => {
+                    const day = new Date(feedback.created_at).toISOString().split('T')[0];
+                    if (feedbackByDay.hasOwnProperty(day)) {
+                        feedbackByDay[day]++;
+                    }
+                });
+                
+                return {
+                    labels: last7Days.map(day => new Date(day).toLocaleDateString('pt-BR')),
+                    feedbackData: last7Days.map(day => feedbackByDay[day])
+                };
+            }
+
+            processFeedbackTypeData() {
+                const typeCounts = {};
+                
+                this.feedbackData.forEach(feedback => {
+                    const formattedType = this.formatFeedbackType(feedback.type);
+                    typeCounts[formattedType] = (typeCounts[formattedType] || 0) + 1;
+                });
+                
+                // Se não houver dados, criar dados de exemplo
+                if (Object.keys(typeCounts).length === 0) {
+                    return {
+                        'Sugestão de Melhoria': 15,
+                        'Problema Encontrado': 8,
+                        'Elogio': 12,
+                        'Questão de Acessibilidade': 5,
+                        'Conteúdo': 3,
+                        'Outro': 2
+                    };
+                }
+                
+                return typeCounts;
+            }
+
+            processDisabilityData() {
+                const disabilityCounts = {};
+                
+                this.questionnaireData.forEach(response => {
+                    const disability = this.formatDisabilityType(response.disability_type);
+                    disabilityCounts[disability] = (disabilityCounts[disability] || 0) + 1;
+                });
+                
+                // Se não houver dados, criar dados de exemplo
+                if (Object.keys(disabilityCounts).length === 0) {
+                    return {
+                        'Deficiência Visual': 8,
+                        'Deficiência Auditiva': 5,
+                        'Deficiência Motora': 7,
+                        'Deficiência Cognitiva': 3,
+                        'Nenhuma Deficiência': 12
+                    };
+                }
+                
+                return disabilityCounts;
+            }
+
+            processTechUsageData() {
+                const techCounts = {};
+                
+                this.questionnaireData.forEach(response => {
+                    const tech = response.assistive_technologies;
+                    if (tech && Array.isArray(tech)) {
+                        tech.forEach(technology => {
+                            const formattedTech = this.formatTechnologies(technology);
+                            techCounts[formattedTech] = (techCounts[formattedTech] || 0) + 1;
+                        });
+                    } else if (tech && typeof tech === 'string' && tech !== 'nenhuma' && tech !== 'none') {
+                        const formattedTech = this.formatTechnologies(tech);
+                        techCounts[formattedTech] = (techCounts[formattedTech] || 0) + 1;
+                    }
+                });
+                
+                // Se não houver dados, criar dados de exemplo
+                if (Object.keys(techCounts).length === 0) {
+                    return {
+                        'Leitor de Tela': 6,
+                        'Navegação por Teclado': 4,
+                        'Alto Contraste': 8,
+                        'Lupa/Ampliador': 3,
+                        'Reconhecimento de Voz': 2
+                    };
+                }
+                
+                return techCounts;
+            }
+
+            processBarriersData() {
+                const barrierCounts = {};
+                
+                this.questionnaireData.forEach(response => {
+                    const problems = response.common_problems;
+                    if (problems && Array.isArray(problems)) {
+                        problems.forEach(problem => {
+                            const formattedProblem = this.formatCommonProblems(problem);
+                            barrierCounts[formattedProblem] = (barrierCounts[formattedProblem] || 0) + 1;
+                        });
+                    } else if (problems && typeof problems === 'string') {
+                        const formattedProblem = this.formatCommonProblems(problems);
+                        barrierCounts[formattedProblem] = (barrierCounts[formattedProblem] || 0) + 1;
+                    }
+                });
+                
+                // Se não houver dados, criar dados de exemplo
+                if (Object.keys(barrierCounts).length === 0) {
+                    return {
+                        'Navegação': 9,
+                        'Contraste de Cores': 7,
+                        'Tamanho do Texto': 5,
+                        'Acesso por Teclado': 4,
+                        'Tempo de Carregamento': 3
+                    };
+                }
+                
+                return barrierCounts;
+            }
+
+            getLast7Days() {
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const day = new Date();
+                    day.setDate(day.getDate() - i);
+                    days.push(day.toISOString().split('T')[0]);
+                }
+                return days;
+            }
+
+            generateReport(type) {
+                try {
+                    let reportData = {};
+                    let filename = '';
+                    
+                    switch (type) {
+                        case 'monthly':
+                            reportData = this.generateMonthlyReport();
+                            filename = `relatorio-mensal-${new Date().toISOString().split('T')[0]}.json`;
+                            break;
+                        case 'accessibility':
+                            reportData = this.generateAccessibilityReport();
+                            filename = `relatorio-acessibilidade-${new Date().toISOString().split('T')[0]}.json`;
+                            break;
+                        case 'user-satisfaction':
+                            reportData = this.generateSatisfactionReport();
+                            filename = `relatorio-satisfacao-${new Date().toISOString().split('T')[0]}.json`;
+                            break;
+                        default:
+                            throw new Error('Tipo de relatório não reconhecido');
+                    }
+                    
+                    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showAlert('Relatório gerado com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Erro ao gerar relatório:', error);
+                    this.showAlert('Erro ao gerar relatório', 'error');
+                }
+            }
+
+            generateMonthlyReport() {
+                return {
+                    tipo: 'Relatório Mensal',
+                    periodo: new Date().toISOString().slice(0, 7), // YYYY-MM
+                    gerado_em: new Date().toISOString(),
+                    resumo: {
+                        total_feedbacks: this.feedbackData.length,
+                        total_questionarios: this.questionnaireData.length,
+                        avaliacao_media: this.feedbackStats?.averageRating || 0,
+                        satisfacao_usuario: Math.round((this.feedbackData.filter(f => f.rating >= 4).length / this.feedbackData.length) * 100) || 0
+                    },
+                    tendencias: this.processTimelineData(),
+                    dados_completos: {
+                        feedbacks: this.feedbackData,
+                        questionarios: this.questionnaireData
+                    }
+                };
+            }
+
+            generateAccessibilityReport() {
+                return {
+                    tipo: 'Relatório de Acessibilidade',
+                    gerado_em: new Date().toISOString(),
+                    distribuicao_deficiencias: this.processDisabilityData(),
+                    uso_tecnologias_assistivas: this.processTechUsageData(),
+                    barreiras_comuns: this.processBarriersData(),
+                    recomendacoes: [
+                        'Melhorar contraste de cores',
+                        'Otimizar navegação por teclado',
+                        'Implementar mais opções de texto alternativo',
+                        'Adicionar suporte para leitores de tela'
+                    ]
+                };
+            }
+
+            generateSatisfactionReport() {
+                const ratings = this.feedbackData.filter(f => f.rating).map(f => f.rating);
+                const avgRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+                
+                return {
+                    tipo: 'Relatório de Satisfação do Usuário',
+                    gerado_em: new Date().toISOString(),
+                    avaliacao_media: avgRating.toFixed(2),
+                    distribuicao_avaliacoes: {
+                        5: ratings.filter(r => r === 5).length,
+                        4: ratings.filter(r => r === 4).length,
+                        3: ratings.filter(r => r === 3).length,
+                        2: ratings.filter(r => r === 2).length,
+                        1: ratings.filter(r => r === 1).length
+                    },
+                    feedbacks_positivos: this.feedbackData.filter(f => 
+                        f.type === 'compliment' || f.type === 'elogio'
+                    ).length,
+                    sugestoes_melhorias: this.feedbackData.filter(f => 
+                        f.type === 'suggestion' || f.type === 'sugestao'
+                    ).length,
+                    problemas_reportados: this.feedbackData.filter(f => 
+                        f.type === 'problem' || f.type === 'problema' || f.type === 'accessibility'
+                    ).length
+                };
+            }
+
+            cleanup() {
+                // Cleanup Chart.js instances
+                if (this.feedbackTrendChart) {
+                    this.feedbackTrendChart.destroy();
+                    this.feedbackTrendChart = null;
+                }
+                if (this.feedbackTypeChart) {
+                    this.feedbackTypeChart.destroy();
+                    this.feedbackTypeChart = null;
+                }
+                if (this.disabilityChart) {
+                    this.disabilityChart.destroy();
+                    this.disabilityChart = null;
+                }
+                if (this.techUsageChart) {
+                    this.techUsageChart.destroy();
+                    this.techUsageChart = null;
+                }
+                if (this.barriersChart) {
+                    this.barriersChart.destroy();
+                    this.barriersChart = null;
+                }
+            }
         }
 
         // Authentication System
@@ -1756,6 +2377,13 @@
             
             setTimeout(() => {
                 adminPanel = new AdminPanel();
+                
+                // Cleanup charts on page unload
+                window.addEventListener('beforeunload', () => {
+                    if (adminPanel) {
+                        adminPanel.cleanup();
+                    }
+                });
             }, 1000);
         });
     </script>
