@@ -393,6 +393,29 @@
             z-index: 1000;
             display: none;
         }
+        /* Legenda para gráficos 3D */
+        .chart-legend-3d {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+        .chart-legend-3d .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chart-legend-3d .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            display: inline-block;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.2) inset;
+        }
 
         /* Responsividade para novos gráficos */
         @media (max-width: 768px) {
@@ -716,13 +739,15 @@
                         this.rawData.feedback = rawFeedback;
                         this.rawData.questionnaires = rawQuestionnaires;
                         
+                        // Exibir seções antes de criar gráficos para garantir dimensões corretas
+                        this.hideLoading();
+                        this.hideError();
+
                         this.displayStats(feedbackStats.data, questionnaireStats.data);
                         this.displayBasicCharts(feedbackStats.data, questionnaireStats.data);
                         this.displayAdvancedCharts();
                         this.displayDataDetails();
                         this.updateDataSource(feedbackStats.source);
-                        this.hideLoading();
-                        this.hideError();
                     } else {
                         throw new Error('Failed to load data');
                     }
@@ -1065,10 +1090,18 @@
                     
                     // Create 3D visualization using Three.js
                     const scene = new THREE.Scene();
-                    const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / 300, 0.1, 1000);
+                    const barsGroup = new THREE.Group();
+                    barsGroup.name = 'ratingsBars';
+                    scene.add(barsGroup);
+                    // Calcular largura visível com fallback
+                    const initialWidth = Math.max(
+                        container.offsetWidth || container.clientWidth || (container.parentElement ? container.parentElement.offsetWidth : 0) || Math.floor(window.innerWidth * 0.9),
+                        400
+                    );
+                    const camera = new THREE.PerspectiveCamera(75, initialWidth / 300, 0.1, 1000);
                     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                     
-                    renderer.setSize(container.offsetWidth, 300);
+                    renderer.setSize(initialWidth, 300);
                     renderer.setClearColor(0x1a1a1a, 0.1);
                     container.appendChild(renderer.domElement);
 
@@ -1096,7 +1129,9 @@
                             cube.position.x = (rating - 2) * 1.2;
                             cube.position.y = height / 2;
                             cube.position.z = 0;
-                            scene.add(cube);
+                            cube.name = 'ratingBar';
+                            cube.userData = { rating: rating + 1, count, color: colors[rating] };
+                            barsGroup.add(cube);
                             
                             // Adicionar texto com o número
                             const loader = new THREE.FontLoader();
@@ -1149,6 +1184,52 @@
                     camera.position.set(5, 3, 5);
                     camera.lookAt(0, 0, 0);
 
+                    // Tooltip interativo (raycasting)
+                    const tooltip = document.getElementById('chart-tooltip');
+                    const raycaster = new THREE.Raycaster();
+                    const mouse = new THREE.Vector2();
+                    const colorToHex = (c) => '#' + c.toString(16).padStart(6, '0');
+
+                    const onMouseMove = (event) => {
+                        const rect = renderer.domElement.getBoundingClientRect();
+                        const x = event.clientX - rect.left;
+                        const y = event.clientY - rect.top;
+                        mouse.x = (x / rect.width) * 2 - 1;
+                        mouse.y = - (y / rect.height) * 2 + 1;
+                        raycaster.setFromCamera(mouse, camera);
+                        const intersects = raycaster.intersectObjects(barsGroup.children, true);
+                        if (intersects.length > 0) {
+                            const obj = intersects[0].object;
+                            const { rating, count, color } = obj.userData || {};
+                            if (rating && typeof count !== 'undefined') {
+                                tooltip.innerHTML = `<span class="swatch" style="display:inline-block;width:12px;height:12px;border-radius:2px;background:${colorToHex(color)};margin-right:6px"></span>${rating} estrela${rating>1?'s':''}: <strong>${count}</strong> avaliação${count>1?'es':''}`;
+                                tooltip.style.left = `${event.clientX + 10}px`;
+                                tooltip.style.top = `${event.clientY + 10}px`;
+                                tooltip.style.display = 'block';
+                            }
+                        } else {
+                            tooltip.style.display = 'none';
+                        }
+                    };
+
+                    const onMouseLeave = () => {
+                        tooltip.style.display = 'none';
+                    };
+                    renderer.domElement.addEventListener('mousemove', onMouseMove);
+                    renderer.domElement.addEventListener('mouseleave', onMouseLeave);
+
+                    // Responsividade: ajustar tamanho em resize
+                    const resizeHandler = () => {
+                        const newWidth = Math.max(
+                            container.offsetWidth || container.clientWidth || (container.parentElement ? container.parentElement.offsetWidth : 0) || Math.floor(window.innerWidth * 0.9),
+                            400
+                        );
+                        renderer.setSize(newWidth, 300);
+                        camera.aspect = newWidth / 300;
+                        camera.updateProjectionMatrix();
+                    };
+                    window.addEventListener('resize', resizeHandler);
+
                     // Animation loop
                     let animationId;
                     function animate() {
@@ -1159,7 +1240,25 @@
                     animate();
 
                     // Store reference for cleanup
-                    this.charts.ratings3d = { renderer, scene, camera, animationId };
+                    this.charts.ratings3d = { renderer, scene, camera, animationId, resizeHandler, onMouseMove, onMouseLeave };
+                    
+                    // Legenda de cores por rating
+                    const legend = document.createElement('div');
+                    legend.className = 'chart-legend-3d';
+                    const legends = [
+                        { label: '1 estrela', color: colors[0] },
+                        { label: '2 estrelas', color: colors[1] },
+                        { label: '3 estrelas', color: colors[2] },
+                        { label: '4 estrelas', color: colors[3] },
+                        { label: '5 estrelas', color: colors[4] },
+                    ];
+                    legend.innerHTML = legends.map(l => `
+                        <span class="legend-item">
+                            <span class="swatch" style="background:${colorToHex(l.color)}"></span>
+                            <span>${l.label}</span>
+                        </span>
+                    `).join('');
+                    container.appendChild(legend);
                     
                     console.log('✅ Gráfico 3D criado com sucesso!');
                 } catch (error) {
@@ -1182,11 +1281,22 @@
 
             processRatingsData() {
                 const ratings = [0, 0, 0, 0, 0]; // Index 0-4 for ratings 1-5
+                // Contar avaliações do feedback
                 this.rawData.feedback.forEach(item => {
-                    if (item.rating && item.rating >= 1 && item.rating <= 5) {
-                        ratings[item.rating - 1]++;
+                    const r = typeof item.rating === 'string' ? parseInt(item.rating, 10) : item.rating;
+                    if (r && r >= 1 && r <= 5) {
+                        ratings[r - 1]++;
                     }
                 });
+
+                // Fallback: incluir avaliações dos questionários (site_rating)
+                this.rawData.questionnaires.forEach(item => {
+                    const sr = typeof item.site_rating === 'string' ? parseInt(item.site_rating, 10) : item.site_rating;
+                    if (sr && sr >= 1 && sr <= 5) {
+                        ratings[sr - 1]++;
+                    }
+                });
+
                 return ratings;
             }
 
@@ -1743,6 +1853,12 @@
                     // Limpar renderer
                     if (this.charts.ratings3d.renderer) {
                         this.charts.ratings3d.renderer.dispose();
+                        if (this.charts.ratings3d.onMouseMove) {
+                            this.charts.ratings3d.renderer.domElement.removeEventListener('mousemove', this.charts.ratings3d.onMouseMove);
+                        }
+                        if (this.charts.ratings3d.onMouseLeave) {
+                            this.charts.ratings3d.renderer.domElement.removeEventListener('mouseleave', this.charts.ratings3d.onMouseLeave);
+                        }
                     }
                     // Limpar geometrias e materiais da cena
                     if (this.charts.ratings3d.scene) {
@@ -1758,6 +1874,9 @@
                                 }
                             }
                         });
+                    }
+                    if (this.charts.ratings3d.resizeHandler) {
+                        window.removeEventListener('resize', this.charts.ratings3d.resizeHandler);
                     }
                 }
                 
