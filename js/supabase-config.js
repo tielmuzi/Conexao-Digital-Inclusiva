@@ -5,8 +5,8 @@
 
 // Supabase configuration
 const SUPABASE_CONFIG = {
-    url: 'https://kjranknaqdenlcozecpx.supabase.co', // Replace with your Supabase URL
-    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqcmFua25hcWRlbmxjb3plY3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwMDQ5NzcsImV4cCI6MjA3NjU4MDk3N30.kz0ftSCdPfzyFuLlP3hkNTi-ncvmHAWCGTOfw2rCiCE', // Replace with your Supabase anon key
+    url: 'https://awsvfglpicvskujtjpmy.supabase.co', // Replace with your Supabase URL
+    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3c3ZmZ2xwaWN2c2t1anRqcG15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwOTk0NTMsImV4cCI6MjA4ODY3NTQ1M30.sanuVpi-jaJQG53EatCu2yBMNqj_mkZ4GBQ2daDab-I', // Replace with your Supabase anon key
     
     // Table names as specified in the document
     tables: {
